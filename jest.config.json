@@ -1,0 +1,38 @@
+{
+  "verbose": true,
+  "transform": {
+    ".ts": "ts-jest"
+  },
+  "testEnvironment": "node",
+  "testRegex": "(/test/.*|\\.test)\\.ts$",
+  "globals": {
+    "ts-jest": {
+      "tsConfig": "./tsconfig.test.json"
+    }
+  },
+  "moduleFileExtensions": [ "ts", "js", "json" ],
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "packages/*/src/**/*.ts",
+    "!**/node_modules/**"
+  ],
+  "testPathIgnorePatterns": [
+    "<rootDir>/(dist|config|node_modules)/",
+    "<rootDir>/packages/*/(dist|config|node_modules|docs)/"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/packages/*/(dist|config|node_modules|docs)/"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 90,
+      "function": 95,
+      "lines": 70,
+      "statements": 70
+    }
+  },
+  "roots": [
+    "packages/"
+  ]
+}

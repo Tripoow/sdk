@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.test.base",
+  "compilerOptions": {
+    "composite": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./packages/interfaces/tsconfig.test.json" },
+    { "path": "./packages/webrequest/tsconfig.test.json" },
+    { "path": "./packages/sdk/tsconfig.test.json" },
+  ]
+}

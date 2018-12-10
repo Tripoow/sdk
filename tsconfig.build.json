@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "composite": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./packages/interfaces" },
+    { "path": "./packages/webrequest" },
+    { "path": "./packages/sdk" },
+  ]
+}

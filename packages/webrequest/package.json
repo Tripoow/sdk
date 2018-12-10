@@ -1,0 +1,35 @@
+{
+  "name": "@tripoow/webrequest",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Carpinato G. <gaetanocarpinato@gmail.com>",
+  "license": "MIT",
+  "main": "dist/umd/webrequest.js",
+  "module": "dist/esm/webrequest.js",
+  "typings": "dist/types/index.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "scripts": {
+    "clean": "rimraf dist && rimraf docs",
+    "prebuild": "yarn run clean",
+    "barrels": "barrelsby --config ../../.barrelsby.json",
+    "build": "yarn run barrels && tsc && rollup -c ../../rollup.config.js --environment PACKAGE_NAME:webrequest",
+    "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build:all": "yarn run build && yarn run build:docs",
+    "start": "rollup -c ../../rollup.config.js --watch --environment PACKAGE_NAME:webrequest",
+    "lint": "tslint --project tsconfig.test.json -t codeFrame \"src/**/*.ts\" \"test/**/*.ts\""
+  },
+  "dependencies": {
+    "@tripoow/interfaces": "file:../interfaces",
+    "@types/request": "~2.47.1",
+    "@types/request-promise-native": "^1.0.15",
+    "request": "~2.88.0",
+    "request-promise-native": "^1.0.5"
+  },
+  "private": false,
+  "keywords": []
+}
