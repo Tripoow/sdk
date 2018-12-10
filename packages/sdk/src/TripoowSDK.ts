@@ -24,7 +24,9 @@ export class TripoowSDK {
         }
       })
       .then((response: ResponseBase<CityResult[]>) => {
-        console.log(typeof response);
+        if (response.status >= 300) {
+          throw new Error();
+        }
         return response.results;
       });
   }
@@ -36,6 +38,9 @@ export class TripoowSDK {
     return this.request
       .get<ResponseBase<ResponseResults>>(this.baseUrl + url, options)
       .then((response) => {
+        if (response.status >= 300) {
+          throw new Error();
+        }
         return response.results;
       });
   }
@@ -47,6 +52,9 @@ export class TripoowSDK {
     return this.request
       .post<ResponseBase<ResponseBody>>(this.baseUrl + url, options)
       .then((response) => {
+        if (response.status >= 300) {
+          throw new Error();
+        }
         return response.results;
       });
   }
