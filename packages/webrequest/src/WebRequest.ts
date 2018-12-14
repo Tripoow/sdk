@@ -1,5 +1,5 @@
 import * as request_ from 'request-promise-native';
-import { RequestHandler } from '@tripoow/interfaces';
+import { RequestHandler, Data, RequestCore } from '@tripoow/interfaces';
 import { CoreOptions } from 'request';
 
 const request = request_;
@@ -25,51 +25,21 @@ export interface StatusCodeError {
   statusCode: number;
 }
 
-export class WebRequest implements RequestHandler {
-  private refactorOptions(
-    method: string,
-    url: string,
-    options?: RequestOptions
-  ): RequestOptionsWithUrl {
-    const optionsWithUrl: RequestOptionsWithUrl =
-      options === undefined
-        ? ({ url: url } as RequestOptionsWithUrl)
-        : (options as RequestOptionsWithUrl);
-    if (!optionsWithUrl.url) {
-      optionsWithUrl.url = url;
-    }
-    optionsWithUrl.method = method;
-    return optionsWithUrl;
-  }
+export class WebRequest extends RequestHandler {
 
-  public async handle<T = any>(options: RequestOptionsWithUrl): Promise<T> {
-    if (options.json === undefined) {
-      options.json = true;
-    }
+  public async handle<T = any, D extends Data = Data>(requestCore: RequestCore<D>): Promise<T> {
+    const r: RequestOptionsWithUrl = {
+      url: requestCore.url,
+      method: requestCore.method,
+      body: requestCore.body,
+      headers: (!requestCore.headers) ? {} : requestCore.headers.toObject(),
+      json: true
+    };
+
     try {
-      return await request(options);
+      return await request(r);
     } catch (error) {
       return error;
     }
-  }
-
-  public async get<T = any>(url: string, options?: RequestOptions | undefined): Promise<T> {
-    return this.handle<T>(this.refactorOptions('get', url, options));
-  }
-
-  public async post<T = any>(url: string, options?: RequestOptions | undefined): Promise<T> {
-    return this.handle<T>(this.refactorOptions('post', url, options));
-  }
-
-  public async put<T = any>(url: string, options?: RequestOptions | undefined): Promise<T> {
-    return this.handle<T>(this.refactorOptions('post', url, options));
-  }
-
-  public async patch<T = any>(url: string, options?: RequestOptions | undefined): Promise<T> {
-    return this.handle<T>(this.refactorOptions('post', url, options));
-  }
-
-  public async delete<T = any>(url: string, options?: RequestOptions | undefined): Promise<T> {
-    return this.handle<T>(this.refactorOptions('post', url, options));
   }
 }

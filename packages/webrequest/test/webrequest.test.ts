@@ -1,4 +1,5 @@
 import { WebRequest } from '../src/index';
+import { Headers } from '@tripoow/interfaces';
 
 describe('WebRequest SDK test', () => {
   it('works?', () => {
@@ -11,9 +12,9 @@ describe('WebRequest SDK test', () => {
 
     web
       .get('http://api.tripoow.com/', {
-        headers: {
-          'User-Agent': 'Request-Promise'
-        }
+        headers: new Headers([
+          [ 'User-Agent', 'Request-Promise' ]
+        ])
       })
       .then(response => {
         if (typeof response === 'string') {

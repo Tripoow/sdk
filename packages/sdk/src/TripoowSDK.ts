@@ -1,6 +1,4 @@
-import { RequestHandler, CityResult } from '@tripoow/interfaces';
-
-export interface RequestCityOptions {}
+import { RequestHandler, OriginResult, RequestOriginOptions, Headers } from '@tripoow/interfaces';
 
 export interface ResponseBase<T> {
   error: boolean;
@@ -9,53 +7,99 @@ export interface ResponseBase<T> {
   status: number;
 }
 
-export class TripoowSDK {
+export interface BearerResult {
+  bearer: string;
+}
+
+export type Environment = 'production' | 'stage' | 'development';
+
+export class TripoowSDK<R extends RequestHandler> {
   private baseUrl: string;
 
-  constructor(protected request: RequestHandler) {
-    this.baseUrl = 'https://api.tripoow.com/';
+  constructor(
+    protected builderRequest: new (defaultHeaders?: Headers) => R,
+    protected env: Environment = 'production'
+  ) {
+    switch (this.env) {
+      case 'development':
+        this.baseUrl = 'https://devapi.tripoow.com/';
+      break;
+      case 'stage':
+        this.baseUrl = 'https://stageapi.tripoow.com/';
+      break;
+      default:
+        this.baseUrl = 'https://api.tripoow.com/';
+      break;
+    }
   }
 
-  public getCities(options?: RequestCityOptions | undefined): Promise<CityResult[]> {
-    return this.request
-      .get<ResponseBase<CityResult[]>>(this.baseUrl + 'cities', {
-        headers: {
-          'User-Agent': 'Request-Promise'
+  public async authenticate(apiKey: string, apiSecret: string): Promise<boolean>;
+  public async authenticate(user: string, password: string): Promise<boolean> {
+    const bearerResult: BearerResult = await this.getBearer(user, password);
+    this.setBearer(bearerResult.bearer);
+    return true;
+  }
+
+  public async getBearer(user: string, password: string): Promise<BearerResult> {
+    const request: RequestHandler = new this.builderRequest();
+    const response = await request
+      .post<ResponseBase<BearerResult>>(this.baseUrl + 'auth/login', {
+        headers: new Headers([
+          [ 'User-Agent', 'Request-Promise' ]
+        ]),
+        data: {
+          'email': user,
+          'password': password
         }
-      })
-      .then((response: ResponseBase<CityResult[]>) => {
-        if (response.status >= 300) {
-          throw new Error();
-        }
-        return response.results;
       });
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
   }
 
-  public get<RequestOptions, ResponseResults>(
+  public setBearer(bearer: string): void
+  {
+    console.log('nop');
+  }
+
+  public async getOrigins(options?: RequestOriginOptions | undefined): Promise<OriginResult[]> {
+    const request: RequestHandler = new this.builderRequest();
+    const response = await request
+      .get<ResponseBase<OriginResult[]>>(this.baseUrl + 'cities_beepry', {
+        headers: new Headers([
+          [ 'User-Agent', 'Request-Promise' ]
+        ])
+      });
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
+  }
+
+  public async get<RequestOptions, ResponseResults>(
     url: string,
     options?: RequestOptions | undefined
   ): Promise<ResponseResults> {
-    return this.request
-      .get<ResponseBase<ResponseResults>>(this.baseUrl + url, options)
-      .then((response) => {
-        if (response.status >= 300) {
-          throw new Error();
-        }
-        return response.results;
-      });
+    const request: RequestHandler = new this.builderRequest();
+    const response = await request
+      .get<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
   }
 
-  public post<RequestOptions, ResponseBody>(
+  public async post<RequestOptions, ResponseBody>(
     url: string,
     options?: RequestOptions | undefined
   ): Promise<ResponseBody> {
-    return this.request
-      .post<ResponseBase<ResponseBody>>(this.baseUrl + url, options)
-      .then((response) => {
-        if (response.status >= 300) {
-          throw new Error();
-        }
-        return response.results;
-      });
+    const request: RequestHandler = new this.builderRequest();
+    const response = await request
+      .post<ResponseBase<ResponseBody>>(this.baseUrl + url, options);
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
   }
 }
