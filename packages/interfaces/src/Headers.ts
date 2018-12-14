@@ -25,7 +25,7 @@ export class Headers {
     this.map.clear();
   }
 
-  public* entries(): IterableIterator<[string, any]> {
+  public entries(): IterableIterator<[string, any]> {
     return this.map.entries();
   }
 

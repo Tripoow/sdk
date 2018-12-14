@@ -13,7 +13,9 @@ describe('Tripoow SDK test', () => {
   it('TripoowSDK test request', () => {
     const test = new TripoowSDK<WebRequest>(WebRequest, 'development');
     test
-      .getOrigins()
+      .getOrigins({
+        suggest: 'cata'
+      })
       .then((origins) => {
         console.log(origins[0]);
         expect(origins).toBeTruthy();

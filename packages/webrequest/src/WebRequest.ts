@@ -37,9 +37,10 @@ export class WebRequest extends RequestHandler {
     };
 
     try {
-      return await request(r);
+      const response: request_.RequestPromise<any> = await request(r);
+      return response;
     } catch (error) {
-      return error;
+      throw error;
     }
   }
 }

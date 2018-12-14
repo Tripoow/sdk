@@ -10,10 +10,10 @@ export interface OriginResult {
   code: string;
 }
 
-export interface RequestOriginOptions {
+export interface OriginOptions {
   suggest?: string;
   pos?: {
-    lat: string,
-    lon: string
+      lat: string;
+      lon: string;
   };
 }

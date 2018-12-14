@@ -3,6 +3,19 @@ import { Headers } from './Headers';
 export type Data = { [key: string]: any };
 export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
+export interface RequestBaseData {
+  page: number;
+  limit: number;
+  filter_groups?: {
+    or?: boolean;
+    filters: {
+      key: string;
+      value: string;
+      operator: string;
+    }[];
+  }[];
+}
+
 export interface RequestOptions<D extends Data = Data> {
   headers?: Headers;
   data?: D
@@ -26,7 +39,7 @@ export abstract class RequestHandler {
     const str: string[] = [];
     let p: string;
     for (p in obj) {
-      if (obj.hasDwnProperty(p)) {
+      if (obj.hasOwnProperty(p)) {
         const k: string = prefix
           ? prefix + '[' + p + ']'
           : p;
@@ -64,7 +77,7 @@ export abstract class RequestHandler {
 
       if (options.data) {
         if (method === 'get' || method === 'delete') {
-          request.url += '&' + RequestHandler.serialize(options.data);
+          request.url += '?' + RequestHandler.serialize(options.data);
         } else {
           request.body = options.data;
         }
