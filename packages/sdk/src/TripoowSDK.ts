@@ -50,7 +50,7 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
   public async getBearer(user: string, password: string): Promise<BearerResult> {
-    const request: RequestHandler = new this.builderRequest();
+    const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
     const response = await request
       .post<ResponseBase<LoginResult>>(this.baseUrl + 'auth/login', {
         headers: new Headers([
@@ -124,7 +124,7 @@ export class TripoowSDK<R extends RequestHandler> {
       };
     };
     const originsData = refactorData(options);
-    const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
+    const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request
       .get<ResponseBase<OriginResult[]>>(this.baseUrl + 'cities_beepry', {
         headers: new Headers([
@@ -139,7 +139,7 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
   public async get<RequestOptions, ResponseResults>(url: string, options?: RequestOptions): Promise<ResponseResults> {
-    const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
+    const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request
       .get<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
     if (response.status >= 300) {
@@ -149,7 +149,7 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
   public async post<RequestOptions, ResponseBody>(url: string, options?: RequestOptions): Promise<ResponseBody> {
-    const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
+    const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request
       .post<ResponseBase<ResponseBody>>(this.baseUrl + url, options);
     if (response.status >= 300) {
