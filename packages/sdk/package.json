@@ -1,6 +1,6 @@
 {
   "name": "@tripoow/sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "> TODO: description",
   "author": "Carpinato G. <gaetanocarpinato@gmail.com>",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "lint": "tslint --project tsconfig.test.json -t codeFrame \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
-    "@tripoow/webrequest": "^1.0.1"
+    "@tripoow/webrequest": "^1.0.2"
   },
   "private": false,
   "keywords": [],
