@@ -7,6 +7,7 @@
   "main": "dist/umd/interfaces.js",
   "module": "dist/esm/interfaces.js",
   "typings": "dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "./dist"
   ],
