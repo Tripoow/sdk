@@ -9,7 +9,7 @@
   "typings": "dist/types/index.d.ts",
   "types": "dist/types/index.d.ts",
   "files": [
-    "./dist"
+    "dist/**/*"
   ],
   "publishConfig": {
     "registry": "https://registry.yarnpkg.com",
