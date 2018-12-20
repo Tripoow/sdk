@@ -11,7 +11,8 @@
     "./dist"
   ],
   "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
+    "registry": "https://registry.yarnpkg.com",
+    "access": "public"
   },
   "scripts": {
     "clean": "rimraf dist && rimraf docs",
@@ -28,5 +29,5 @@
   },
   "private": false,
   "keywords": [],
-  "gitHead": "bd995ce0b175d3c1fb3e5be6c6872a26e46a39e3"
+  "gitHead": "01c1190e131f6413130168da2df631d185b38417"
 }
