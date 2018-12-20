@@ -1,4 +1,12 @@
-import { RequestHandler, OriginResult, OriginOptions, Headers, RequestBaseData } from '@tripoow/interfaces';
+import {
+  RequestHandler,
+  OriginResult,
+  OriginOptions,
+  Headers,
+  RequestBaseData,
+  DestinationOptions,
+  DestinationResult
+} from '@tripoow/interfaces';
 
 export interface ResponseBase<T> {
   error: boolean;
@@ -31,15 +39,15 @@ export class TripoowSDK<R extends RequestHandler> {
     switch (this.env) {
       case 'development':
         this.baseUrl = 'https://devapi.tripoow.com/';
-      break;
+        break;
       case 'stage':
         this.baseUrl = 'https://stageapi.tripoow.com/';
-      break;
+        break;
       default:
         this.baseUrl = 'https://api.tripoow.com/';
-      break;
+        break;
     }
-    this.defaultHeaders = new Headers();
+    this.defaultHeaders = new Headers([['User-Agent', 'Request-Promise']]);
   }
 
   public async authenticate(apiKey: string, apiSecret: string): Promise<boolean>;
@@ -51,16 +59,12 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getBearer(user: string, password: string): Promise<BearerResult> {
     const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
-    const response = await request
-      .post<ResponseBase<LoginResult>>(this.baseUrl + 'auth/login', {
-        headers: new Headers([
-          [ 'User-Agent', 'Request-Promise' ]
-        ]),
-        data: {
-          'email': user,
-          'password': password
-        }
-      });
+    const response = await request.post<ResponseBase<LoginResult>>(this.baseUrl + 'auth/login', {
+      data: {
+        email: user,
+        password: password
+      }
+    });
     if (response.status >= 300) {
       throw new Error();
     }
@@ -70,13 +74,25 @@ export class TripoowSDK<R extends RequestHandler> {
     };
   }
 
-  public setBearer(bearer: string): void
-  {
-    this.defaultHeaders.set('Authorization', 'Bearer '+bearer);
+  public setBearer(bearer: string): void {
+    this.defaultHeaders.set('Authorization', 'Bearer ' + bearer);
+  }
+
+  public async getDestinations(options?: DestinationOptions): Promise<DestinationResult[]> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<DestinationResult[]>>(
+      this.baseUrl + 'destinations'
+    );
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
   }
 
   public async getOrigins(options?: OriginOptions): Promise<OriginResult[]> {
-    const refactorData: (options?: OriginOptions) => RequestBaseData | undefined = (options?: OriginOptions): RequestBaseData | undefined => {
+    const refactorData: (options?: OriginOptions) => RequestBaseData | undefined = (
+      options?: OriginOptions
+    ): RequestBaseData | undefined => {
       if (options) {
         if (options.suggest) {
           return {
@@ -125,33 +141,36 @@ export class TripoowSDK<R extends RequestHandler> {
     };
     const originsData = refactorData(options);
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request
-      .get<ResponseBase<OriginResult[]>>(this.baseUrl + 'cities_beepry', {
-        headers: new Headers([
-          [ 'User-Agent', 'Request-Promise' ]
-        ]),
+    const response = await request.get<ResponseBase<OriginResult[]>>(
+      this.baseUrl + 'cities_beepry',
+      {
         data: originsData
-      });
+      }
+    );
     if (response.status >= 300) {
       throw new Error();
     }
     return response.results;
   }
 
-  public async get<RequestOptions, ResponseResults>(url: string, options?: RequestOptions): Promise<ResponseResults> {
+  public async get<RequestOptions, ResponseResults>(
+    url: string,
+    options?: RequestOptions
+  ): Promise<ResponseResults> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request
-      .get<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
+    const response = await request.get<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
     if (response.status >= 300) {
       throw new Error();
     }
     return response.results;
   }
 
-  public async post<RequestOptions, ResponseBody>(url: string, options?: RequestOptions): Promise<ResponseBody> {
+  public async post<RequestOptions, ResponseBody>(
+    url: string,
+    options?: RequestOptions
+  ): Promise<ResponseBody> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request
-      .post<ResponseBase<ResponseBody>>(this.baseUrl + url, options);
+    const response = await request.post<ResponseBase<ResponseBody>>(this.baseUrl + url, options);
     if (response.status >= 300) {
       throw new Error();
     }
