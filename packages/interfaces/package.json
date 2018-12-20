@@ -24,5 +24,6 @@
     "lint": "tslint --project tsconfig.test.json -t codeFrame \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "private": false,
-  "keywords": []
+  "keywords": [],
+  "gitHead": "bd995ce0b175d3c1fb3e5be6c6872a26e46a39e3"
 }

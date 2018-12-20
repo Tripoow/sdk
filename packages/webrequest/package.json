@@ -24,12 +24,13 @@
     "lint": "tslint --project tsconfig.test.json -t codeFrame \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
-    "@tripoow/interfaces": "file:../interfaces",
+    "@tripoow/interfaces": "^1.0.1-alpha.0",
     "@types/request": "~2.47.1",
     "@types/request-promise-native": "^1.0.15",
     "request": "~2.88.0",
     "request-promise-native": "^1.0.5"
   },
   "private": false,
-  "keywords": []
+  "keywords": [],
+  "gitHead": "bd995ce0b175d3c1fb3e5be6c6872a26e46a39e3"
 }
