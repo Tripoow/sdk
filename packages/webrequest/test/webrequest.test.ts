@@ -31,15 +31,5 @@ describe('WebRequest SDK test', () => {
         console.log(error);
         expect(error).toBeTruthy();
       });
-
-    web
-      .post('test')
-      .then(value => {
-        expect(value).toBeTruthy();
-      })
-      .catch(error => {
-        console.log(error);
-        expect(error).toBeTruthy();
-      });
   });
 });

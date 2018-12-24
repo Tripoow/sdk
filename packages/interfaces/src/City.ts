@@ -63,9 +63,10 @@ export interface DestinationOptions {
 }
 
 export interface DateOptions {
+  budget: number;
   originCode: string;
   destinationCode: string;
-  budget: string;
+  hasHotels?: boolean;
 }
 
 

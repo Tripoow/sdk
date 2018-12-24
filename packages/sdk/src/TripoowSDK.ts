@@ -7,7 +7,9 @@ import {
   DateOptions,
   DateResults,
   DestinationOptions,
-  DestinationResult
+  DestinationResult,
+  PackOverviewOptions,
+  PackOverviewResult
 } from '@tripoow/interfaces';
 
 export interface ResponseBase<T> {
@@ -105,7 +107,8 @@ export class TripoowSDK<R extends RequestHandler> {
         data: {
           destinations: {
             originCode: options.originCode,
-            budget: options.budget
+            budget: options.budget,
+            hasHotels: options.hasHotels
           }
         }
       }
@@ -172,6 +175,21 @@ export class TripoowSDK<R extends RequestHandler> {
       this.baseUrl + 'cities_beepry',
       {
         data: originsData
+      }
+    );
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
+  }
+
+
+  public async getPacksOverview(options?: PackOverviewOptions): Promise<PackOverviewResult[]> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<PackOverviewResult[]>>(
+      this.baseUrl + '/packs/overview', {
+        data: {
+        }
       }
     );
     if (response.status >= 300) {
