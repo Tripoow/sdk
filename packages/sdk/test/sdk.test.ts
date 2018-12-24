@@ -34,5 +34,18 @@ describe('Tripoow SDK test', () => {
         console.log(error);
         expect(error).toBeTruthy();
       });
+
+      test.
+        getDates({
+          originCode: 'CATA',
+          destinationCode: 'ROME',
+          budget: '20000'
+        }).then((dates) => {
+          console.log(dates);
+          expect(dates).toBeTruthy();
+        }).catch((error) => {
+          console.log(error);
+          expect(error).toBeTruthy();
+        });
   });
 });

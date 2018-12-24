@@ -61,3 +61,25 @@ export interface DestinationOptions {
   tagsCode?: string[];
   continentsCode?: string[];
 }
+
+export interface DateOptions {
+  originCode: string;
+  destinationCode: string;
+  budget: string;
+}
+
+
+export interface DateResult {
+  days: number;
+  outward: string;
+  return: string;
+  priceFrom: number;
+  isWeekend: boolean;
+}
+
+export interface DateResults {
+  weekends: DateResult[];
+  weeks: DateResult[];
+  longs: DateResult[];
+}
+

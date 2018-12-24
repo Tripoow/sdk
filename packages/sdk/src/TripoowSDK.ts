@@ -4,6 +4,8 @@ import {
   OriginOptions,
   Headers,
   RequestBaseData,
+  DateOptions,
+  DateResults,
   DestinationOptions,
   DestinationResult
 } from '@tripoow/interfaces';
@@ -78,10 +80,35 @@ export class TripoowSDK<R extends RequestHandler> {
     this.defaultHeaders.set('Authorization', 'Bearer ' + bearer);
   }
 
-  public async getDestinations(options?: DestinationOptions): Promise<DestinationResult[]> {
+  public async getDestinations(options: DestinationOptions): Promise<DestinationResult[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<DestinationResult[]>>(
-      this.baseUrl + 'destinations'
+      this.baseUrl + 'destinations', {
+        data: {
+          destinations: {
+            originCode: options.originCode,
+            budget: options.budget
+          }
+        }
+      }
+    );
+    if (response.status >= 300) {
+      throw new Error();
+    }
+    return response.results;
+  }
+
+  public async getDates(options: DateOptions): Promise<DateResults> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<DateResults>>(
+      this.baseUrl + 'destinations/' + options.destinationCode + '/dates', {
+        data: {
+          destinations: {
+            originCode: options.originCode,
+            budget: options.budget
+          }
+        }
+      }
     );
     if (response.status >= 300) {
       throw new Error();
