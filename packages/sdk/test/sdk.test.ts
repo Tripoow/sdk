@@ -1,8 +1,12 @@
 import { TripoowSDK } from '../src/index';
 import { WebRequest } from '@tripoow/webrequest';
-import { OriginResult, DestinationResult, DateResult, DateResults } from '@tripoow/interfaces';
+import { OriginResult, DestinationResult, DateResult, DateResults, PackOverviewResult } from '@tripoow/interfaces';
 
 describe('Tripoow SDK test', () => {
+  beforeEach(() => {
+    jest.setTimeout(100000);
+  });
+
   it('works if true is truthy', () => {
     expect(true).toBeTruthy();
   });
@@ -15,6 +19,7 @@ describe('Tripoow SDK test', () => {
     const test = new TripoowSDK<WebRequest>(WebRequest, 'development');
 
     const budget: number = 500;
+    const travelerAdults: number = 2;
     const suggest: string = 'cata';
     const hasHotels: boolean = true;
 
@@ -37,7 +42,27 @@ describe('Tripoow SDK test', () => {
       hasHotels: hasHotels
     });
     expect(dates.weekends).toBeTruthy();
-    console.log(dates);
+    console.log(dates.weekends[0]);
+
+    const packs: PackOverviewResult = await test.getPacksOverview({
+      budget: budget,
+      originCode: origins[0].code,
+      destinationCode: destinations[0].code,
+      outwardDate: dates.weekends[0].outward,
+      returnDate: dates.weekends[0].return,
+      travelers: {
+        adults: travelerAdults
+      },
+      accomodations: {
+        guests: [
+          {
+            adults: travelerAdults
+          }
+        ]
+      }
+    });
+    expect(packs).toBeTruthy();
+    console.log(packs);
 
     test.
       getBearer('bloren93@gmail.com', 'laurabartolone2')
