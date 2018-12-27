@@ -145,4 +145,8 @@ export namespace ResponseResults {
     best?: Pack;
     top?: Pack;
   }
+
+  export interface Accomodation {
+
+  }
 }

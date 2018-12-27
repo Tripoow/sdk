@@ -82,5 +82,19 @@ describe('Tripoow SDK test', () => {
     });
     expect(packs).toBeTruthy();
     console.log(packs[0]);
+
+    const accomodations: ResponseResults.Accomodation[] = await test.getAccomodations({
+      priceNightMax: budget,
+      destinationCode: destinations[0].code,
+      checkin: dates.weekends[0].outward,
+      checkout: dates.weekends[0].return,
+      guests: [
+        {
+          adults: 2
+        }
+      ]
+    });
+    expect(accomodations).toBeTruthy();
+    console.log(accomodations[0]);
   });
 });

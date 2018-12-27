@@ -43,12 +43,14 @@ export abstract class RequestHandler {
         const k: string = prefix
           ? prefix + '[' + p + ']'
           : p;
-        const v: string | null | object = obj[p];
-        const value: string = (v !== null && typeof v === 'object')
-          ? RequestHandler.serialize(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v as string);
-        if (value) {
-          str.push(value);
+        const v: object | string | null | undefined = obj[p];
+        if (typeof obj[p] !== 'undefined') {
+          const value: string = (v !== null && typeof v === 'object')
+            ? RequestHandler.serialize(v, k)
+            : encodeURIComponent(k) + '=' + encodeURIComponent(v as string);
+          if (value) {
+            str.push(value);
+          }
         }
       }
     }

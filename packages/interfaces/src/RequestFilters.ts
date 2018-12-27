@@ -56,4 +56,17 @@ export namespace RequestFilters {
     }
   }
 
+  export interface Accomodation {
+    checkin: string;
+    checkout: string;
+    destinationCode: string;
+    guests: AgesRangeDetail[];
+    priceNightMin?: number;
+    priceNightMax?: number;
+    ratingMin?: number;
+    stars?: string[]; // ['1', '3']
+    metersFromCenterMin?: number;
+    metersFromCenterMax?: number;
+    facilities?: string[];
+  }
 }

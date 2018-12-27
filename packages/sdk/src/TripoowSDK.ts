@@ -266,6 +266,31 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
+  public async getAccomodations(filters: RequestFilters.Accomodation): Promise<ResponseResults.Accomodation[]>
+  {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<ResponseResults.Accomodation[]>>(
+      this.baseUrl + 'accomodations', {
+        data: {
+          accomodations: {
+            checkin: filters.checkin,
+            checkout: filters.checkout,
+            destinationCode: filters.destinationCode,
+            guests: filters.guests,
+            priceNightMin: filters.priceNightMin,
+            priceNightMax: filters.priceNightMax,
+            ratingMin: filters.ratingMin,
+            stars: filters.stars,
+            metersFromCenterMin: filters.metersFromCenterMin,
+            metersFromCenterMax: filters.metersFromCenterMax,
+            facilities: filters.facilities,
+          }
+        }
+      }
+    );
+    return response.results;
+  }
+
   public async get<RequestOptions, ResponseResults>(
     url: string,
     filters?: RequestOptions
