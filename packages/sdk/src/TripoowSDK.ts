@@ -2,7 +2,7 @@ import {
   RequestHandler,
   Headers,
   RequestBaseData,
-  Filters,
+  RequestFilters,
   ResponseResults,
 } from '@tripoow/interfaces';
 
@@ -69,14 +69,14 @@ export class TripoowSDK<R extends RequestHandler> {
     this.defaultHeaders.set('x-locale', locale);
   }
 
-  public async getDestinations(options: Filters.Destination): Promise<ResponseResults.Destination[]> {
+  public async getDestinations(filters: RequestFilters.Destination): Promise<ResponseResults.Destination[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.Destination[]>>(
       this.baseUrl + 'destinations', {
         data: {
           destinations: {
-            originCode: options.originCode,
-            budget: options.budget
+            originCode: filters.originCode,
+            budget: filters.budget
           }
         }
       }
@@ -87,15 +87,15 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getDates(options: Filters.Dates): Promise<ResponseResults.DatesOverview> {
+  public async getDates(filters: RequestFilters.Dates): Promise<ResponseResults.DatesOverview> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.DatesOverview>>(
-      this.baseUrl + 'destinations/' + options.destinationCode + '/dates', {
+      this.baseUrl + 'destinations/' + filters.destinationCode + '/dates', {
         data: {
           destinations: {
-            originCode: options.originCode,
-            budget: options.budget,
-            hasHotels: options.hasHotels
+            originCode: filters.originCode,
+            budget: filters.budget,
+            hasHotels: filters.hasHotels
           }
         }
       }
@@ -106,12 +106,12 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getOrigins(options?: Filters.Origin): Promise<ResponseResults.Origin[]> {
-    const refactorData: (options?: Filters.Origin) => RequestBaseData | undefined = (
-      options?: Filters.Origin
+  public async getOrigins(filters?: RequestFilters.Origin): Promise<ResponseResults.Origin[]> {
+    const refactorData: (filters?: RequestFilters.Origin) => RequestBaseData | undefined = (
+      filters?: RequestFilters.Origin
     ): RequestBaseData | undefined => {
-      if (options) {
-        if (options.suggest) {
+      if (filters) {
+        if (filters.suggest) {
           return {
             limit: 10,
             page: 0,
@@ -121,14 +121,14 @@ export class TripoowSDK<R extends RequestHandler> {
                   {
                     key: 'place',
                     operator: 'ct',
-                    value: options.suggest
+                    value: filters.suggest
                   }
                 ]
               }
             ]
           };
         }
-        if (options.pos) {
+        if (filters.pos) {
           return {
             limit: 10,
             page: 0,
@@ -138,12 +138,12 @@ export class TripoowSDK<R extends RequestHandler> {
                   {
                     key: 'lat',
                     operator: 'eq',
-                    value: options.pos.lat
+                    value: filters.pos.lat
                   },
                   {
                     key: 'lon',
                     operator: 'eq',
-                    value: options.pos.lon
+                    value: filters.pos.lon
                   }
                 ]
               }
@@ -156,7 +156,7 @@ export class TripoowSDK<R extends RequestHandler> {
         page: 0
       };
     };
-    const originsData = refactorData(options);
+    const originsData = refactorData(filters);
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.Origin[]>>(
       this.baseUrl + 'cities_beepry',
@@ -171,35 +171,35 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
 
-  public async getPacksOverview(options: Filters.PackOverview): Promise<ResponseResults.PackOverview> {
+  public async getPacksOverview(filters: RequestFilters.PackOverview): Promise<ResponseResults.PackOverview> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.PackOverview>>(
       this.baseUrl + '/packs/overview', {
         data: {
           packs: {
-            budget: options.budget,
-            outwardDate: options.outwardDate,
-            returnDate: options.returnDate,
+            budget: filters.budget,
+            outwardDate: filters.outwardDate,
+            returnDate: filters.returnDate,
             travelers: {
-              adults: options.travelers.adults
+              adults: filters.travelers.adults
             },
             itineraries: [
               {
                 origin: {
-                  code: options.originCode,
-                  departureDate: options.outwardDate,
+                  code: filters.originCode,
+                  departureDate: filters.outwardDate,
                 },
                 destination: {
-                  code: options.destinationCode,
+                  code: filters.destinationCode,
                 }
               },
               {
                 origin: {
-                  code: options.destinationCode
+                  code: filters.destinationCode
                 },
                 destination: {
-                  code: options.originCode,
-                  arrivalDate: options.returnDate
+                  code: filters.originCode,
+                  arrivalDate: filters.returnDate
                 }
               }
             ],
@@ -209,7 +209,7 @@ export class TripoowSDK<R extends RequestHandler> {
               segmentsMax: -1,
               stopoverDurationMax: -1,
             },
-            accomodations: options.accomodations
+            accomodations: filters.accomodations
           }
         }
       }
@@ -220,36 +220,36 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getPacks(options: Filters.Pack): Promise<ResponseResults.Pack[]>
+  public async getPacks(filters: RequestFilters.Pack): Promise<ResponseResults.Pack[]>
   {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.Pack[]>>(
       this.baseUrl + 'packs', {
         data: {
           packs: {
-            budget: options.budget,
-            outwardDate: options.outwardDate,
-            returnDate: options.returnDate,
+            budget: filters.budget,
+            outwardDate: filters.outwardDate,
+            returnDate: filters.returnDate,
             travelers: {
-              adults: options.travelers.adults
+              adults: filters.travelers.adults
             },
             itineraries: [
               {
                 origin: {
-                  code: options.originCode,
-                  departureDate: options.outwardDate,
+                  code: filters.originCode,
+                  departureDate: filters.outwardDate,
                 },
                 destination: {
-                  code: options.destinationCode,
+                  code: filters.destinationCode,
                 }
               },
               {
                 origin: {
-                  code: options.destinationCode
+                  code: filters.destinationCode
                 },
                 destination: {
-                  code: options.originCode,
-                  arrivalDate: options.returnDate
+                  code: filters.originCode,
+                  arrivalDate: filters.returnDate
                 }
               }
             ],
@@ -268,10 +268,10 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async get<RequestOptions, ResponseResults>(
     url: string,
-    options?: RequestOptions
+    filters?: RequestOptions
   ): Promise<ResponseResults> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
+    const response = await request.get<ResponseBase<ResponseResults>>(this.baseUrl + url, filters);
     if (response.status >= 300) {
       throw new Error();
     }
@@ -280,10 +280,10 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async post<RequestOptions, ResponseResults>(
     url: string,
-    options?: RequestOptions
+    filters?: RequestOptions
   ): Promise<ResponseResults> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
+    const response = await request.post<ResponseBase<ResponseResults>>(this.baseUrl + url, filters);
     if (response.status >= 300) {
       throw new Error();
     }

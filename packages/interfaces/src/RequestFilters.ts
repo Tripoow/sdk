@@ -1,6 +1,6 @@
-import { Month } from "./standard";
+import { Month } from './standard';
 
-export namespace Filters {
+export namespace RequestFilters {
 
   export interface AgesRange {
     adults: number;
