@@ -1,4 +1,4 @@
-export interface PackOverviewOptions {
+export interface PackOptions {
   budget: number;
   outwardDate: string;
   returnDate: string;
@@ -9,6 +9,13 @@ export interface PackOverviewOptions {
   };
   originCode: string;
   destinationCode: string;
+}
+
+export interface PackResult {
+
+}
+
+export interface PackOverviewOptions extends PackOptions {
   accomodations?: {
     guests: {
       adults: number;
@@ -20,5 +27,7 @@ export interface PackOverviewOptions {
 }
 
 export interface PackOverviewResult {
-
+  cheapest: any;
+  best: any;
+  top: any;
 }

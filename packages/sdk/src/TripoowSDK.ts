@@ -8,6 +8,8 @@ import {
   DateResults,
   DestinationOptions,
   DestinationResult,
+  PackOptions,
+  PackResult,
   PackOverviewOptions,
   PackOverviewResult
 } from '@tripoow/interfaces';
@@ -184,9 +186,9 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
 
-  public async getPacksOverview(options: PackOverviewOptions): Promise<PackOverviewResult[]> {
+  public async getPacksOverview(options: PackOverviewOptions): Promise<PackOverviewResult> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<PackOverviewResult[]>>(
+    const response = await request.get<ResponseBase<PackOverviewResult>>(
       this.baseUrl + '/packs/overview', {
         data: {
           packs: {
@@ -230,6 +232,52 @@ export class TripoowSDK<R extends RequestHandler> {
     if (response.status >= 300) {
       throw new Error();
     }
+    return response.results;
+  }
+
+  public async getPacks(options: PackOptions): Promise<PackResult[]>
+  {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<PackResult[]>>(
+      this.baseUrl + 'packs', {
+        data: {
+          packs: {
+            budget: options.budget,
+            outwardDate: options.outwardDate,
+            returnDate: options.returnDate,
+            travelers: {
+              adults: options.travelers.adults
+            },
+            itineraries: [
+              {
+                origin: {
+                  code: options.originCode,
+                  departureDate: options.outwardDate,
+                },
+                destination: {
+                  code: options.destinationCode,
+                }
+              },
+              {
+                origin: {
+                  code: options.destinationCode
+                },
+                destination: {
+                  code: options.originCode,
+                  arrivalDate: options.returnDate
+                }
+              }
+            ],
+            routes: {
+              carriersCode: [],
+              durationMax: 0,
+              segmentsMax: -1,
+              stopoverDurationMax: -1,
+            }
+          }
+        }
+      }
+    );
     return response.results;
   }
 

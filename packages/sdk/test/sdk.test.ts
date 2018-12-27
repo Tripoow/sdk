@@ -1,6 +1,6 @@
 import { TripoowSDK } from '../src/index';
 import { WebRequest } from '@tripoow/webrequest';
-import { OriginResult, DestinationResult, DateResult, DateResults, PackOverviewResult } from '@tripoow/interfaces';
+import { OriginResult, DestinationResult, DateResult, DateResults, PackOverviewResult, PackResult } from '@tripoow/interfaces';
 
 describe('Tripoow SDK test', () => {
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('Tripoow SDK test', () => {
     expect(dates.weekends).toBeTruthy();
     console.log(dates.weekends[0]);
 
-    const packs: PackOverviewResult = await test.getPacksOverview({
+    const packsOverview: PackOverviewResult = await test.getPacksOverview({
       budget: budget,
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
@@ -61,8 +61,20 @@ describe('Tripoow SDK test', () => {
         ]
       }
     });
+    expect(packsOverview.cheapest).toBeTruthy();
+
+    const packs: PackResult[] = await test.getPacks({
+      budget: budget,
+      originCode: origins[0].code,
+      destinationCode: destinations[0].code,
+      outwardDate: dates.weekends[0].outward,
+      returnDate: dates.weekends[0].return,
+      travelers: {
+        adults: travelerAdults
+      }
+    });
     expect(packs).toBeTruthy();
-    console.log(packs);
+    console.log(packs[0]);
 
     test.
       getBearer('bloren93@gmail.com', 'laurabartolone2')
