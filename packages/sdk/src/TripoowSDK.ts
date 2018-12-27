@@ -1,17 +1,9 @@
 import {
   RequestHandler,
-  OriginResult,
-  OriginOptions,
   Headers,
   RequestBaseData,
-  DateOptions,
-  DateResults,
-  DestinationOptions,
-  DestinationResult,
-  PackOptions,
-  PackResult,
-  PackOverviewOptions,
-  PackOverviewResult
+  Filters,
+  ResponseResults,
 } from '@tripoow/interfaces';
 
 export interface ResponseBase<T> {
@@ -19,17 +11,6 @@ export interface ResponseBase<T> {
   message: string;
   results: T;
   status: number;
-}
-
-export interface BearerResult {
-  bearer: string;
-  expiresIn: number;
-}
-
-export interface LoginResult {
-  access_token: string;
-  expires_in: number;
-  user_id: number;
 }
 
 export type Environment = 'production' | 'stage' | 'development';
@@ -58,14 +39,14 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async authenticate(apiKey: string, apiSecret: string): Promise<boolean>;
   public async authenticate(user: string, password: string): Promise<boolean> {
-    const bearerResult: BearerResult = await this.getBearer(user, password);
-    this.setBearer(bearerResult.bearer);
+    const bearerResult: ResponseResults.Authorization = await this.getBearer(user, password);
+    this.setAuthorization(bearerResult.bearer);
     return true;
   }
 
-  public async getBearer(user: string, password: string): Promise<BearerResult> {
+  public async getBearer(user: string, password: string): Promise<ResponseResults.Authorization> {
     const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseBase<LoginResult>>(this.baseUrl + 'auth/login', {
+    const response = await request.post<ResponseBase<ResponseResults.AuthLogin>>(this.baseUrl + 'auth/login', {
       data: {
         email: user,
         password: password
@@ -80,13 +61,17 @@ export class TripoowSDK<R extends RequestHandler> {
     };
   }
 
-  public setBearer(bearer: string): void {
+  public setAuthorization(bearer: string): void {
     this.defaultHeaders.set('Authorization', 'Bearer ' + bearer);
   }
 
-  public async getDestinations(options: DestinationOptions): Promise<DestinationResult[]> {
+  public setLocale(locale: string): void {
+    this.defaultHeaders.set('x-locale', locale);
+  }
+
+  public async getDestinations(options: Filters.Destination): Promise<ResponseResults.Destination[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<DestinationResult[]>>(
+    const response = await request.get<ResponseBase<ResponseResults.Destination[]>>(
       this.baseUrl + 'destinations', {
         data: {
           destinations: {
@@ -102,9 +87,9 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getDates(options: DateOptions): Promise<DateResults> {
+  public async getDates(options: Filters.Dates): Promise<ResponseResults.DatesOverview> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<DateResults>>(
+    const response = await request.get<ResponseBase<ResponseResults.DatesOverview>>(
       this.baseUrl + 'destinations/' + options.destinationCode + '/dates', {
         data: {
           destinations: {
@@ -121,9 +106,9 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getOrigins(options?: OriginOptions): Promise<OriginResult[]> {
-    const refactorData: (options?: OriginOptions) => RequestBaseData | undefined = (
-      options?: OriginOptions
+  public async getOrigins(options?: Filters.Origin): Promise<ResponseResults.Origin[]> {
+    const refactorData: (options?: Filters.Origin) => RequestBaseData | undefined = (
+      options?: Filters.Origin
     ): RequestBaseData | undefined => {
       if (options) {
         if (options.suggest) {
@@ -173,7 +158,7 @@ export class TripoowSDK<R extends RequestHandler> {
     };
     const originsData = refactorData(options);
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<OriginResult[]>>(
+    const response = await request.get<ResponseBase<ResponseResults.Origin[]>>(
       this.baseUrl + 'cities_beepry',
       {
         data: originsData
@@ -186,9 +171,9 @@ export class TripoowSDK<R extends RequestHandler> {
   }
 
 
-  public async getPacksOverview(options: PackOverviewOptions): Promise<PackOverviewResult> {
+  public async getPacksOverview(options: Filters.PackOverview): Promise<ResponseResults.PackOverview> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<PackOverviewResult>>(
+    const response = await request.get<ResponseBase<ResponseResults.PackOverview>>(
       this.baseUrl + '/packs/overview', {
         data: {
           packs: {
@@ -235,10 +220,10 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getPacks(options: PackOptions): Promise<PackResult[]>
+  public async getPacks(options: Filters.Pack): Promise<ResponseResults.Pack[]>
   {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<PackResult[]>>(
+    const response = await request.get<ResponseBase<ResponseResults.Pack[]>>(
       this.baseUrl + 'packs', {
         data: {
           packs: {
@@ -293,12 +278,12 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async post<RequestOptions, ResponseBody>(
+  public async post<RequestOptions, ResponseResults>(
     url: string,
     options?: RequestOptions
-  ): Promise<ResponseBody> {
+  ): Promise<ResponseResults> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseBase<ResponseBody>>(this.baseUrl + url, options);
+    const response = await request.post<ResponseBase<ResponseResults>>(this.baseUrl + url, options);
     if (response.status >= 300) {
       throw new Error();
     }
