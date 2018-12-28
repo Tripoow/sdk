@@ -1,6 +1,6 @@
 {
   "name": "@tripoow/webrequest",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "> TODO: description",
   "author": "Carpinato G. <gaetanocarpinato@gmail.com>",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "lint": "tslint --project tsconfig.test.json -t codeFrame \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
-    "@tripoow/interfaces": "^1.1.2",
+    "@tripoow/interfaces": "^1.1.3",
     "@types/request": "~2.47.1",
     "@types/request-promise-native": "^1.0.15",
     "request": "~2.88.0",
