@@ -48,14 +48,14 @@ describe('Tripoow SDK test', () => {
       hasHotels: hasHotels
     });
     expect(dates.weekends).toBeTruthy();
-    console.log(dates.weekends[0]);
+    const date: ResponseResults.Dates = dates.weekends[0] || dates.weeks[0];
 
     const packsOverview: ResponseResults.PackOverview = await test.getPacksOverview({
       budget: budget,
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
-      outwardDate: dates.weekends[0].outward,
-      returnDate: dates.weekends[0].return,
+      outwardDate: date.outward,
+      returnDate: date.return,
       travelers: {
         adults: travelerAdults
       },
@@ -74,8 +74,8 @@ describe('Tripoow SDK test', () => {
       budget: budget,
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
-      outwardDate: dates.weekends[0].outward,
-      returnDate: dates.weekends[0].return,
+      outwardDate: date.outward,
+      returnDate: date.return,
       travelers: {
         adults: travelerAdults
       }
@@ -86,8 +86,8 @@ describe('Tripoow SDK test', () => {
     const accomodations: ResponseResults.Accomodation[] = await test.getAccomodations({
       priceNightMax: budget,
       destinationCode: destinations[0].code,
-      checkin: dates.weekends[0].outward,
-      checkout: dates.weekends[0].return,
+      checkin: date.outward,
+      checkout: date.return,
       guests: [
         {
           adults: 2
@@ -96,5 +96,8 @@ describe('Tripoow SDK test', () => {
     });
     expect(accomodations).toBeTruthy();
     console.log(accomodations[0]);
+
+    const packCheck: ResponseResults.PackCheck = await test.getPackCheck(packs[0].token);
+    console.log(packCheck);
   });
 });

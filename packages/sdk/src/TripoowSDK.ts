@@ -266,8 +266,21 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getAccomodations(filters: RequestFilters.Accomodation): Promise<ResponseResults.Accomodation[]>
-  {
+  public async getPackCheck(packToken: string): Promise<ResponseResults.PackCheck> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.post<ResponseBase<ResponseResults.PackCheck>>(
+      this.baseUrl + 'packs/check', {
+        data: {
+          check: {
+            packToken: packToken
+          }
+        }
+      }
+    );
+    return response.results;
+  }
+
+  public async getAccomodations(filters: RequestFilters.Accomodation): Promise<ResponseResults.Accomodation[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.Accomodation[]>>(
       this.baseUrl + 'accomodations', {

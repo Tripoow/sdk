@@ -149,4 +149,46 @@ export namespace ResponseResults {
   export interface Accomodation {
 
   }
+
+  export interface Bag {
+    width: number; // cm
+    height: number; // cm
+    length: number; // cm
+    weight: number; // kg
+    max: number;
+    name: string;
+    includePriorityBoarding: true;
+    prices: Price[];
+    total?: number;
+    type?: string;
+  }
+
+  export interface Insurance {
+    price: number;
+    name: string;
+    type: 'basic' | 'plus';
+  }
+
+  export interface PackCheck {
+    status: 'ok' | 'invalid' | 'changed';
+    priceDeal?: number;
+    pack?: Pack;
+    bags?: {
+      hand: Bag;
+      hold: Bag;
+      personal: Bag;
+    };
+    priorityBoarding: {
+      available: boolean;
+      flightsAvailable: string[];
+      partialPriority: boolean;
+      price: Price;
+      currency: 'EUR' | string;
+    };
+    insurances?: Insurance[];
+    discount?: {
+      coupons: any[];
+      credit: number;
+    }
+  }
 }
