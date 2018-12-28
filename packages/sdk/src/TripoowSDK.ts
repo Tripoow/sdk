@@ -174,7 +174,7 @@ export class TripoowSDK<R extends RequestHandler> {
   public async getPacksOverview(filters: RequestFilters.PackOverview): Promise<ResponseResults.PackOverview> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseBase<ResponseResults.PackOverview>>(
-      this.baseUrl + '/packs/overview', {
+      this.baseUrl + 'packs/overview', {
         data: {
           packs: {
             budget: filters.budget,
@@ -304,24 +304,30 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async get<RequestOptions, ResponseResults>(
-    url: string,
-    filters?: RequestOptions
-  ): Promise<ResponseResults> {
+  public async getBookings(): Promise<ResponseResults.Bookings> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseBase<ResponseResults>>(this.baseUrl + url, filters);
+    const response = await request.get(this.baseUrl + 'bookings');
+    return response.results;
+  }
+
+  public async get<Filters, Results>(
+    url: string,
+    filters?: Filters
+  ): Promise<Results> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseBase<Results>>(this.baseUrl + url, filters);
     if (response.status >= 300) {
       throw new Error();
     }
     return response.results;
   }
 
-  public async post<RequestOptions, ResponseResults>(
+  public async post<Filters, Results>(
     url: string,
-    filters?: RequestOptions
-  ): Promise<ResponseResults> {
+    filters?: Filters
+  ): Promise<Results> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseBase<ResponseResults>>(this.baseUrl + url, filters);
+    const response = await request.post<ResponseBase<Results>>(this.baseUrl + url, filters);
     if (response.status >= 300) {
       throw new Error();
     }

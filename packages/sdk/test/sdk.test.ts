@@ -24,6 +24,9 @@ describe('Tripoow SDK test', () => {
     test.setAuthorization(auth.bearer);
     test.setLocale('it');
 
+    const bookings: ResponseResults.Bookings = await test.getBookings();
+    console.log(bookings);
+
     const budget: number = 500;
     const travelerAdults: number = 2;
     const suggest: string = 'cata';

@@ -191,4 +191,28 @@ export namespace ResponseResults {
       credit: number;
     }
   }
+
+  export interface Booking {
+    id: number;
+    departureDate: string;
+    returnDate: string;
+    code: string;
+    status: 'pending' | 'failed' | string;
+    price: Price;
+    contact: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      phone: string;
+    };
+    user: {[key: string]: string};
+    services: {[key: string]: any} | null;
+    servicesCount?: {[key: string]: any};
+    city: Destination;
+  }
+
+  export interface Bookings {
+    active: Booking[];
+    expired: Booking[];
+  }
 }
