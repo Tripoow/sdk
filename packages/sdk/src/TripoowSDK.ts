@@ -221,9 +221,7 @@ export class TripoowSDK<R extends RequestHandler> {
             budget: filters.budget,
             outwardDate: filters.outwardDate,
             returnDate: filters.returnDate,
-            travelers: {
-              adults: filters.travelers.adults
-            },
+            travelers: filters.travelers,
             itineraries: [
               {
                 origin: {
@@ -272,9 +270,7 @@ export class TripoowSDK<R extends RequestHandler> {
             budget: filters.budget,
             outwardDate: filters.outwardDate,
             returnDate: filters.returnDate,
-            travelers: {
-              adults: filters.travelers.adults
-            },
+            travelers: filters.travelers,
             itineraries: [
               {
                 origin: {
