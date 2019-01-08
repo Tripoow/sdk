@@ -49,6 +49,23 @@ export namespace ResponseResults {
     };
   }
 
+  export interface DestinationWiki {
+    title: string;
+    description: string;
+    contributors: string;
+    article_link: string;
+  }
+
+  export interface DestinationImage {
+    src: string;
+  }
+
+  export interface DestinationTag {
+    code: string;
+    name_en: string;
+    name_it: string;
+  }
+
   export interface Dates {
     days: number;
     outward: string;

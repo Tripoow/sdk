@@ -157,7 +157,17 @@ export class TripoowSDK<R extends RequestHandler> {
           page: 0,
           destinations: {
             originCode: filters.originCode,
-            budget: filters.budget
+            budget: filters.budget,
+            budgetFrom: filters.budgetFrom,
+            months: filters.months,
+            datesFrom: filters.datesFrom,
+            datesTo: filters.datesTo,
+            daysMin: filters.daysMin,
+            daysMax: filters.daysMax,
+            hasHotels: filters.hasHotels,
+            suggest: filters.suggest,
+            tagsCode: filters.tagsCode,
+            continentsCode: filters.continentsCode
           }
         }
       }
@@ -175,7 +185,8 @@ export class TripoowSDK<R extends RequestHandler> {
             originCode: filters.originCode,
             type: filters.type,
             budget: filters.budget,
-            hasHotels: filters.hasHotels
+            hasHotels: filters.hasHotels,
+            months: filters.months
           }
         }
       }
@@ -192,7 +203,8 @@ export class TripoowSDK<R extends RequestHandler> {
           destinations: {
             originCode: filters.originCode,
             budget: filters.budget,
-            hasHotels: filters.hasHotels
+            hasHotels: filters.hasHotels,
+            months: filters.months
           }
         }
       }
@@ -332,6 +344,30 @@ export class TripoowSDK<R extends RequestHandler> {
         }
       }
     );
+  }
+
+  public async getDestinationImages(destinationCode: string): Promise<ResponseResults.DestinationImage[]> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseSDKBase<any>>(
+      this.baseUrl + 'cities/' + destinationCode + '/images'
+    );
+    return response.results;
+  }
+
+  public async getDestinationTags(destinationCode: string): Promise<ResponseResults.DestinationTag[]> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseSDKBase<any>>(
+      this.baseUrl + 'cities/' + destinationCode + '/tags'
+    );
+    return response.results;
+  }
+
+  public async getDestinationWiki(destinationCode: string): Promise<ResponseResults.DestinationWiki> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseSDKBase<any>>(
+      this.baseUrl + 'cities/' + destinationCode + '/wiki'
+    );
+    return response.results;
   }
 
   public async getBookings(): Promise<ResponseSDKBase<ResponseResults.Bookings>> {
