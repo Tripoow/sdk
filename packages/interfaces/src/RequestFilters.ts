@@ -22,6 +22,7 @@ export namespace RequestFilters {
 
   export interface Destination {
     originCode: string;
+    budgetFrom?: number;
     budget: number;
     months?: Month[];
     datesFrom?: string;
@@ -38,7 +39,9 @@ export namespace RequestFilters {
     budget: number;
     originCode: string;
     destinationCode: string;
+    type?: 'weekends' | 'weeks' | 'longs';
     hasHotels?: boolean;
+    months?: Month[];
   }
 
   export interface Pack {

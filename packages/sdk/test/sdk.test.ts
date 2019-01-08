@@ -1,6 +1,6 @@
-import { TripoowSDK } from '../src/index';
+import { TripoowSDK, ResponseSDKBase } from '../src/index';
 import { WebRequest } from '@tripoow/webrequest';
-import { ResponseResults } from '@tripoow/interfaces';
+import { ResponseResults, RequestStream } from '@tripoow/interfaces';
 
 describe('Tripoow SDK test', () => {
   beforeEach(() => {
@@ -24,36 +24,41 @@ describe('Tripoow SDK test', () => {
     test.setAuthorization(auth.bearer);
     test.setLocale('it');
 
-    const bookings: ResponseResults.Bookings = await test.getBookings();
-    console.log(bookings);
+    const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
+    console.log(responseBookings.results.expired[0]);
 
     const budget: number = 500;
     const travelerAdults: number = 2;
     const suggest: string = 'cata';
     const hasHotels: boolean = true;
 
-    const origins: ResponseResults.Origin[] = await test.getOrigins({suggest: suggest});
+    const streamOrigin: RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> = test.streamOrigins({suggest: suggest});
+    const origins: ResponseResults.Origin[] = await streamOrigin.next();
     expect(origins[0]).toBeTruthy();
     console.log(origins[0]);
 
-    const destinations: ResponseResults.Destination[] = await test.getDestinations({
+    const streamDestinations: RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> = test.streamDestinations({
       budget: budget,
       originCode: origins[0].code,
       hasHotels: hasHotels
     });
+    const destinations: ResponseResults.Destination[] = await streamDestinations.next();
     expect(destinations[0]).toBeTruthy();
     console.log(destinations[0]);
 
-    const dates: ResponseResults.DatesOverview = await test.getDates({
+    const streamDates: RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> = test.streamDates({
       budget: budget,
+      type: 'weeks',
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
       hasHotels: hasHotels
     });
-    expect(dates.weekends).toBeTruthy();
-    const date: ResponseResults.Dates = dates.weekends[0] || dates.weeks[0];
+    const dates: ResponseResults.Dates[] = await streamDates.next();
+    expect(dates[0]).toBeTruthy();
+    const date: ResponseResults.Dates = dates[0];
+    console.log(date);
 
-    const packsOverview: ResponseResults.PackOverview = await test.getPacksOverview({
+    const packsOverview: ResponseSDKBase<ResponseResults.PackOverview> = await test.getPacksOverview({
       budget: budget,
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
@@ -70,10 +75,10 @@ describe('Tripoow SDK test', () => {
         ]
       }
     });
-    expect(packsOverview.cheapest).toBeTruthy();
-    console.log(packsOverview.cheapest);
+    expect(packsOverview.results.cheapest).toBeTruthy();
+    console.log(packsOverview.results.cheapest);
 
-    const packs: ResponseResults.Pack[] = await test.getPacks({
+    const streamPacks: RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> = test.streamPacks({
       budget: budget,
       originCode: origins[0].code,
       destinationCode: destinations[0].code,
@@ -83,24 +88,26 @@ describe('Tripoow SDK test', () => {
         adults: travelerAdults
       }
     });
+    const packs: ResponseResults.Pack[] = await streamPacks.next();
     expect(packs).toBeTruthy();
     console.log(packs[0]);
 
-    const accomodations: ResponseResults.Accomodation[] = await test.getAccomodations({
+    const streamAccomodations: RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> = test.streamAccomodations({
       priceNightMax: budget,
       destinationCode: destinations[0].code,
       checkin: date.outward,
       checkout: date.return,
       guests: [
         {
-          adults: 2
+          adults: travelerAdults
         }
       ]
     });
+    const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
     expect(accomodations).toBeTruthy();
     console.log(accomodations[0]);
 
-    const packCheck: ResponseResults.PackCheck = await test.getPackCheck(packs[0].token);
-    console.log(packCheck);
+    const responsePackCheck: ResponseSDKBase<ResponseResults.PackCheck> = await test.getPackCheck(packs[0].token);
+    console.log(responsePackCheck.results);
   });
 });

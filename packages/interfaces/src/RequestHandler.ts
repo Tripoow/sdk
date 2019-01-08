@@ -1,20 +1,12 @@
 import { Headers } from './Headers';
 
-export type Data = { [key: string]: any };
-export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
+export type Data = {
+  limit?: number;
+  page?: number;
+  [key: string]: any
+};
 
-export interface RequestBaseData {
-  page: number;
-  limit: number;
-  filter_groups?: {
-    or?: boolean;
-    filters: {
-      key: string;
-      value: string;
-      operator: string;
-    }[];
-  }[];
-}
+export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 export interface RequestOptions<D extends Data = Data> {
   headers?: Headers;
@@ -26,6 +18,11 @@ export interface RequestCore<D extends Data = Data> {
     method: Method;
     headers?: Headers;
     body?: D;
+}
+
+export interface ResponseBase<T> {
+  results: T;
+  [key: string]: any;
 }
 
 export abstract class RequestHandler {
@@ -89,7 +86,11 @@ export abstract class RequestHandler {
     return request;
   }
 
-  public abstract async handle<T = any, D extends Data = Data>(request: RequestCore<D>): Promise<T>;
+  public abstract async handle<T = any, D extends Data = Data>(requestCore: RequestCore<D>): Promise<T>;
+
+  public createStream<T = any, Response extends ResponseBase<T[]> = ResponseBase<T[]>>(url: string, options: RequestOptions<any>): RequestStream<T, Response> {
+    return new RequestStream<T, Response>(this, url, options);
+  }
 
   public async get<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('get', url, options));
@@ -109,5 +110,47 @@ export abstract class RequestHandler {
 
   public async delete<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('delete', url, options));
+  }
+}
+
+export class RequestStream<T = any, Response extends ResponseBase<T[]> = ResponseBase<T[]>>
+{
+  protected status: 'ready' | 'pending' | 'complete' | 'firstTime';
+
+  constructor(
+    protected request: RequestHandler,
+    protected url: string,
+    protected options: RequestOptions<any>
+  ) {
+    this.status = 'firstTime';
+  }
+
+  public async next(): Promise<T[]> {
+
+    if (this.status === 'complete') {
+      return [] as T[];
+    }
+
+    if (this.status === 'pending') {
+      throw new Error();
+    }
+
+    if (this.status === 'ready') {
+      try {
+        this.options.data.page += 1;
+      } catch(Error) {
+        throw new Error();
+      }
+    }
+
+    this.status = 'pending';
+    const response = await this.request.get<Response>(this.url, this.options);
+    if (response.results.length === 0) {
+      this.status = 'complete';
+    } else {
+      this.status = 'ready';
+    }
+
+    return response.results;
   }
 }

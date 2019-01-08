@@ -1,5 +1,5 @@
 import * as request_ from 'request-promise-native';
-import { RequestHandler, Data, RequestCore } from '@tripoow/interfaces';
+import { RequestHandler, Data, RequestCore, RequestStream, ResponseBase } from '@tripoow/interfaces';
 import { CoreOptions } from 'request';
 
 const request = request_;
