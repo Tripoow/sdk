@@ -165,7 +165,7 @@ export class TripoowSDK<R extends RequestHandler> {
             daysMin: filters.daysMin,
             daysMax: filters.daysMax,
             hasHotels: filters.hasHotels,
-            suggest: filters.suggest,
+            city: filters.suggest,
             tagsCode: filters.tagsCode,
             continentsCode: filters.continentsCode
           }
