@@ -116,6 +116,7 @@ export abstract class RequestHandler {
 export class RequestStream<T = any, Response extends ResponseBase<T[]> = ResponseBase<T[]>>
 {
   protected status: 'ready' | 'pending' | 'complete' | 'firstTime';
+  protected _response: Response | undefined;
 
   constructor(
     protected request: RequestHandler,
@@ -145,6 +146,7 @@ export class RequestStream<T = any, Response extends ResponseBase<T[]> = Respons
 
     this.status = 'pending';
     const response = await this.request.get<Response>(this.url, this.options);
+    this._response = response;
     if (response.results.length === 0) {
       this.status = 'complete';
     } else {
@@ -152,5 +154,9 @@ export class RequestStream<T = any, Response extends ResponseBase<T[]> = Respons
     }
 
     return response.results;
+  }
+
+  public response(): Response | undefined {
+    return this._response;
   }
 }
