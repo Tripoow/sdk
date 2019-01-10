@@ -222,33 +222,11 @@ export class TripoowSDK<R extends RequestHandler> {
             outwardDate: filters.outwardDate,
             returnDate: filters.returnDate,
             travelers: filters.travelers,
-            itineraries: [
-              {
-                origin: {
-                  code: filters.originCode,
-                  departureDate: filters.outwardDate,
-                },
-                destination: {
-                  code: filters.destinationCode,
-                }
-              },
-              {
-                origin: {
-                  code: filters.destinationCode
-                },
-                destination: {
-                  code: filters.originCode,
-                  arrivalDate: filters.returnDate
-                }
-              }
-            ],
-            routes: {
-              carriersCode: [],
-              durationMax: 0,
-              segmentsMax: -1,
-              stopoverDurationMax: -1,
-            },
-            accomodations: filters.accomodations
+            itineraries: filters.itineraries,
+            routes: filters.routes,
+            accomodations: {
+              guests: filters.guests
+            }
           }
         }
       }
@@ -266,38 +244,7 @@ export class TripoowSDK<R extends RequestHandler> {
         data: {
           limit: this.defaultLimit,
           page: 0,
-          packs: {
-            budget: filters.budget,
-            outwardDate: filters.outwardDate,
-            returnDate: filters.returnDate,
-            travelers: filters.travelers,
-            itineraries: [
-              {
-                origin: {
-                  code: filters.originCode,
-                  departureDate: filters.outwardDate,
-                },
-                destination: {
-                  code: filters.destinationCode,
-                }
-              },
-              {
-                origin: {
-                  code: filters.destinationCode
-                },
-                destination: {
-                  code: filters.originCode,
-                  arrivalDate: filters.returnDate
-                }
-              }
-            ],
-            routes: {
-              carriersCode: [],
-              durationMax: 0,
-              segmentsMax: -1,
-              stopoverDurationMax: -1,
-            }
-          }
+          packs: filters
         }
       }
     );

@@ -67,30 +67,60 @@ describe('Tripoow SDK test', () => {
 
     const packsOverview: ResponseSDKBase<ResponseResults.PackOverview> = await test.getPacksOverview({
       budget: budget,
-      originCode: origins[0].code,
-      destinationCode: destinations[0].code,
       outwardDate: date.outward,
       returnDate: date.return,
       travelers: {
         adults: travelerAdults
       },
-      accomodations: {
-        guests: [
-          {
-            adults: travelerAdults
+      itineraries: [
+        {
+          origin: {
+            code: origins[0].code,
+          },
+          destination: {
+            code: destinations[0].code
           }
-        ]
-      }
+        },
+        {
+          origin: {
+            code: destinations[0].code
+          },
+          destination: {
+            code: origins[0].code
+          }
+        }
+      ],
+      guests: [
+        {
+          adults: travelerAdults
+        }
+      ]
     });
     expect(packsOverview.results.cheapest).toBeTruthy();
     // console.log('PACKOVERVIEW', packsOverview.results.cheapest);
 
     const streamPacks: RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> = test.streamPacks({
       budget: budget,
-      originCode: origins[0].code,
-      destinationCode: destinations[0].code,
       outwardDate: date.outward,
       returnDate: date.return,
+      itineraries: [
+        {
+          origin: {
+            code: origins[0].code,
+          },
+          destination: {
+            code: destinations[0].code
+          }
+        },
+        {
+          origin: {
+            code: destinations[0].code
+          },
+          destination: {
+            code: origins[0].code
+          }
+        }
+      ],
       travelers: {
         adults: travelerAdults
       }

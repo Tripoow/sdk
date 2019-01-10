@@ -44,25 +44,52 @@ export namespace RequestFilters {
     months?: Month[];
   }
 
+  export interface Routes {
+    segmentsMax: number;
+    carriersCode: string[];
+    stopoverDurationMax: number;
+    durationMax: number;
+  }
+
+  export interface ItineraryOrigin {
+    code: string;
+    departureDate?: string; // YYYY-MM-DD
+    departureHoursRange?: string; // "00:00-00:00"
+  }
+
+  export interface ItineraryDestination {
+    code: string;
+    arrivalDate?: string; // YYYY-MM-DD
+    arrivalHoursRange?: string; // "00:00-00:00"
+  }
+
+  export interface Itinerary {
+    origin: ItineraryOrigin; // Potrebbero diventare array
+    destination: ItineraryDestination; // Potrebbero diventare array
+    travelers?: AgesRange;
+    accomodations?: Accomodation;
+    routes?: Routes;
+  }
+
   export interface Pack {
     budget: number;
-    outwardDate: string;
-    returnDate: string;
+    outwardDate: string; // YYYY-MM-DD
+    returnDate: string; // YYYY-MM-DD
     travelers: AgesRange;
-    originCode: string;
-    destinationCode: string;
+    itineraries: Itinerary[];
+    accomodations?: Accomodation;
+    routes?: Routes;
   }
 
   export interface PackOverview extends Pack {
-    accomodations?: {
-      guests: AgesRangeDetail[];
-    }
+    guests: AgesRangeDetail[];
   }
 
   export interface Accomodation {
     checkin: string;
     checkout: string;
     destinationCode: string;
+    types?: string[];
     guests: AgesRangeDetail[];
     priceNightMin?: number;
     priceNightMax?: number;
