@@ -6,6 +6,12 @@ export namespace ResponseResults {
     user_id: number;
   }
 
+  export interface MediaImages {
+    small?: string[];
+    medium?: string[];
+    large?: string[];
+  }
+
   export interface Authorization {
     bearer: string;
     expiresIn: number;
@@ -27,6 +33,13 @@ export namespace ResponseResults {
     cit_code: string;
     type: string;
     code: string;
+  }
+
+  export interface City {
+    country?: string;
+    continent?: string;
+    iataCode?: string;
+    thumbnail?: string;
   }
 
   export interface Destination {
@@ -163,8 +176,148 @@ export namespace ResponseResults {
     top?: Pack;
   }
 
-  export interface Accomodation {
+  export namespace Hotel {
 
+    export interface Poi {
+      id: string;
+      name: string;
+      latitude: string;
+      longitude: string;
+      scorePercent: number; // Int
+      reviews: string[];
+      metersFrom: number; // Int
+    }
+
+    export interface Policy {
+      type: string;
+      typology: number; // Int
+      nights: number; // Int
+      percentage: number; // Int
+      timeLimit: number; // Int
+      price: Price; // Int
+      description: string;
+      descriptionShort: string;
+    }
+
+    export interface Facility {
+      type: string;
+      label: string;
+      value: string;
+    }
+
+    export interface BoardBase {
+      id: string;
+      code: string;
+      name: string;
+      price: Price;
+      policies?: Policy[];
+    }
+
+    export interface Room {
+      id: string;
+      name: string;
+      maxGuests: {
+        adults: number;
+        children?: number;
+        infants?: number;
+      };
+      categoryCode: string;
+      bedding?: string;
+      quantity: number; // Int
+      priceTotal: Price;
+      priceNight: Price;
+      boardBases: BoardBase[];
+    }
+
+    export interface Product {
+      id: string;
+      rooms: Room[];
+      priceTotal: Price;
+      priceNight: Price;
+      boardBases: BoardBase[];
+    }
+
+    export interface Badge {
+      id: string;
+      title: string;
+      text: string;
+      type: string;
+      scorePercent: number; // Int
+    }
+
+    export interface Score {
+      scorePercent: number; // Int
+      reviewCount: number; // Int
+      reviewCouplePercent: number; // Int
+      reviewSoloPercent: number; // Int
+      reviewFamilyPercent: number; // Int
+      reviewBusinessPercent: number; // Int
+      text: string;
+      star1Count: number; // Int
+      star2Count: number; // Int
+      star3Count: number; // Int
+      star4Count: number; // Int
+      star5Count: number; // Int
+    }
+
+    export interface Review {
+      id: string;
+      category: string;
+      reviewCount: number; // Int
+      scorePercent: number; // Int
+      title: string;
+      description: string;
+    }
+
+    export interface ReviewSocial {
+      id: string;
+      text: string;
+      date: number; // Timestamp
+      author: string;
+      social: string;
+      score: number;
+      lang: string;
+    }
+  }
+
+  export interface Accomodation {
+    id: string;
+    name: string;
+    latitude?: number;
+    longitude?: number;
+    descriptions?: {
+      type: string;
+      text: string;
+    }[];
+    chain?: string;
+    stars: number; // Int
+    address: string;
+    postalCode?: string;
+    metersFromCenter: number; // Int
+    city: City;
+    facilities?: Hotel.Facility[];
+    roomFacilities?: Hotel.Facility[];
+    email?: string;
+    website?: string;
+    nights: number; // Int
+    totalAdults: number; // Int
+    totalChildren: number; // Int
+    checkin: string; // YYYY-MM-DD
+    checkout: string; // YYYY-MM-DD
+    thumbnail: string;
+    media: MediaImages;
+    productIndex?: number; // Int
+    productBoardBaseIndex?: number; // Int
+    products: Hotel.Product[];
+    badges?: Hotel.Badge[];
+    score?: Hotel.Score;
+    reviews?: Hotel.Review[];
+    reviewPosts?: Hotel.ReviewSocial[];
+    pois?: Hotel.Poi[];
+    provider: string;
+    roomPriceMin: number; // ??????????????
+    productPriceMin: number;
+    token?: string;
   }
 
   export interface Bag {

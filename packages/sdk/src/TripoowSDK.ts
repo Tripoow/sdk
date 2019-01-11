@@ -66,9 +66,6 @@ export class TripoowSDK<R extends RequestHandler> {
         password: password
       }
     });
-    if (response.status >= 300) {
-      throw new Error();
-    }
     return {
       bearer: response.results.access_token,
       expiresIn: response.results.expires_in
@@ -231,9 +228,6 @@ export class TripoowSDK<R extends RequestHandler> {
         }
       }
     );
-    if (response.status >= 300) {
-      throw new Error();
-    }
     return response;
   }
 
@@ -289,9 +283,26 @@ export class TripoowSDK<R extends RequestHandler> {
     );
   }
 
+  public async getHotelDetails(filters: RequestFilters.HotelDetails): Promise<ResponseSDKBase<ResponseResults.Accomodation>> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseSDKBase<ResponseResults.Accomodation>>(
+      this.baseUrl + 'hotels/' + filters.id, {
+        data: {
+          hotels: {
+            checkin: filters.checkin,
+            checkout: filters.checkout,
+            destination_code: filters.destinationCode,
+            rooms: filters.guests
+          }
+        }
+      }
+    );
+    return response;
+  }
+
   public async getDestinationImages(destinationCode: string): Promise<ResponseResults.DestinationImage[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseSDKBase<any>>(
+    const response = await request.get<ResponseSDKBase<ResponseResults.DestinationImage[]>>(
       this.baseUrl + 'cities/' + destinationCode + '/images'
     );
     return response.results;
@@ -299,7 +310,7 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getDestinationTags(destinationCode: string): Promise<ResponseResults.DestinationTag[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseSDKBase<any>>(
+    const response = await request.get<ResponseSDKBase<ResponseResults.DestinationTag[]>>(
       this.baseUrl + 'cities/' + destinationCode + '/tags'
     );
     return response.results;
@@ -307,7 +318,7 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getDestinationWiki(destinationCode: string): Promise<ResponseResults.DestinationWiki> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseSDKBase<any>>(
+    const response = await request.get<ResponseSDKBase<ResponseResults.DestinationWiki>>(
       this.baseUrl + 'cities/' + destinationCode + '/wiki'
     );
     return response.results;
@@ -315,7 +326,7 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getBookings(): Promise<ResponseSDKBase<ResponseResults.Bookings>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get(this.baseUrl + 'bookings');
+    const response = await request.get<ResponseSDKBase<ResponseResults.Bookings>>(this.baseUrl + 'bookings');
     return response;
   }
 
@@ -325,9 +336,6 @@ export class TripoowSDK<R extends RequestHandler> {
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
-    if (response.status >= 300) {
-      throw new Error();
-    }
     return response;
   }
 
@@ -337,9 +345,6 @@ export class TripoowSDK<R extends RequestHandler> {
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.post<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
-    if (response.status >= 300) {
-      throw new Error();
-    }
     return response;
   }
 }

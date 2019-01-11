@@ -99,4 +99,12 @@ export namespace RequestFilters {
     metersFromCenterMax?: number;
     facilities?: string[];
   }
+
+  export interface HotelDetails {
+    id: string;
+    checkin: string;
+    checkout: string;
+    destinationCode: string;
+    guests: AgesRangeDetail[];
+  }
 }

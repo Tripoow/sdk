@@ -142,7 +142,21 @@ describe('Tripoow SDK test', () => {
     });
     const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
     expect(accomodations).toBeTruthy();
-    // console.log('ACCOMODATIONS', accomodations[0]);
+    console.log('ACCOMODATIONS', accomodations[0]);
+
+    const hotelDetails: ResponseSDKBase<ResponseResults.Accomodation> = await test.getHotelDetails({
+      checkin: accomodations[0].checkin,
+      checkout: accomodations[0].checkout,
+      destinationCode: destinations[0].code,
+      guests: [
+        {
+          adults: travelerAdults
+        }
+      ],
+      id: accomodations[0].id
+    });
+    expect(hotelDetails.results).toBeTruthy();
+    console.log('HOTELDETAILS', hotelDetails.results);
 
     const responsePackCheck: ResponseSDKBase<ResponseResults.PackCheck> = await test.getPackCheck(packs[0].token);
     // console.log('PACKCHECK', responsePackCheck.results);
