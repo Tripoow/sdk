@@ -88,6 +88,17 @@ export namespace RequestFilters {
     sort?: QuerySort;
   }
 
+  export interface PackCrossover {
+    packOldToken: string;
+    packNewToken?: string;
+    hotel?: {
+      productId?: string;
+      boardBaseId?: string;
+      token?: string;
+      delete?: true;
+    };
+  }
+
   export interface PackOverview extends Pack {
     guests: AgesRangeDetail[];
   }

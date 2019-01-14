@@ -18,7 +18,7 @@ describe('Tripoow SDK test', () => {
   describe('Authorization', () => {
 
     it('set Bearer', async () => {
-      const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone1');
+      const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone');
       test.setAuthorization(auth.bearer);
       return expect(auth.bearer).toBeTruthy();
     });
@@ -52,6 +52,7 @@ describe('Tripoow SDK test', () => {
 
     it('f. Destinations', async () => {
       if (!temp.origin) {
+        expect(false).toBe(true);
         return false;
       }
       const streamDestinations: RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> = test.streamDestinations({
@@ -68,6 +69,7 @@ describe('Tripoow SDK test', () => {
     describe('Destination Details', () => {
       it('f. Wiki', async () => {
         if (!temp.destination) {
+          expect(false).toBe(true);
           return false;
         }
         const wiki: ResponseResults.DestinationWiki = await test.getDestinationWiki(temp.destination.code);
@@ -77,6 +79,7 @@ describe('Tripoow SDK test', () => {
 
       it('f. Tags', async () => {
         if (!temp.destination) {
+          expect(false).toBe(true);
           return false;
         }
         const tags: ResponseResults.DestinationTag[] = await test.getDestinationTags(temp.destination.code);
@@ -86,6 +89,7 @@ describe('Tripoow SDK test', () => {
 
       it('f. Images', async () => {
         if (!temp.destination) {
+          expect(false).toBe(true);
           return false;
         }
         const images: ResponseResults.DestinationImage[] = await test.getDestinationImages(temp.destination.code);
@@ -96,6 +100,7 @@ describe('Tripoow SDK test', () => {
 
     it('f. Dates', async () => {
       if (!temp.origin || !temp.destination) {
+        expect(false).toBe(true);
         return false;
       }
       const streamDates: RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> = test.streamDates({
@@ -113,6 +118,7 @@ describe('Tripoow SDK test', () => {
 
     it('f. Packs', async () => {
       if (!temp.origin || !temp.destination || !temp.dates) {
+        expect(false).toBe(true);
         return false;
       }
       const streamPacks: RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> = test.streamPacks({
@@ -148,6 +154,7 @@ describe('Tripoow SDK test', () => {
 
     it('f. Accomodations', async () => {
       if (!temp.origin || !temp.destination || !temp.dates) {
+        expect(false).toBe(true);
         return false;
       }
       const streamAccomodations: RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> = test.streamAccomodations({
@@ -177,7 +184,7 @@ describe('Tripoow SDK test', () => {
         id: accomodations[0].id
       });
       expect(hotelDetails.results).toBeTruthy();
-      console.log('HOTELDETAILS', hotelDetails.results);
+      console.log('HOTEL-DETAILS', hotelDetails.results);
     });
 
 
@@ -189,6 +196,7 @@ describe('Tripoow SDK test', () => {
 
       it('f. Packs Overview', async () => {
         if (!temp.origin || !temp.destination || !temp.dates) {
+          expect(false).toBe(true);
           return false;
         }
         const packsOverview: ResponseSDKBase<ResponseResults.PackOverview> = await test.getPacksOverview({
@@ -227,14 +235,31 @@ describe('Tripoow SDK test', () => {
         return expect(packsOverview.results.cheapest).toBeTruthy();
       });
 
+
+      it('f. Pack Crossover', async () => {
+        if (!tempPack.pack) {
+          expect(false).toBe(true);
+          return false;
+        }
+        const responsePackCrossover: ResponseSDKBase<ResponseResults.Pack> = await test.postPackCrossover({
+          packOldToken: tempPack.pack.token,
+          hotel: {
+            delete: true
+          }
+        });
+        console.log('PACK-CROSSOVER', responsePackCrossover.results);
+      });
+
       it('f. Pack Check', async () => {
-      if (!tempPack.pack) {
-        return false;
-      }
+        if (!tempPack.pack) {
+          expect(false).toBe(true);
+          return false;
+        }
         const responsePackCheck: ResponseSDKBase<ResponseResults.PackCheck> = await test.getPackCheck(tempPack.pack.token);
-        console.log('PACKCHECK', responsePackCheck.results);
+        console.log('PACK-CHECK', responsePackCheck.results);
         return expect(responsePackCheck.results).toBeTruthy();
       });
+
     });
 
   });

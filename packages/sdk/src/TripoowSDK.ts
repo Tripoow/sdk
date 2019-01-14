@@ -258,6 +258,22 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
+  public async postPackCrossover(filters: RequestFilters.PackCrossover): Promise<ResponseSDKBase<ResponseResults.Pack>> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.post<ResponseSDKBase<ResponseResults.Pack>>(
+      this.baseUrl + 'packs/crossover', {
+        data: {
+          crossover: {
+            packOldToken: filters.packOldToken,
+            packNewToken: filters.packNewToken,
+            hotel: filters.hotel
+          }
+        }
+      }
+    );
+    return response;
+  }
+
   public streamAccomodations(filters: RequestFilters.Accomodation): RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     return request.createStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>>(

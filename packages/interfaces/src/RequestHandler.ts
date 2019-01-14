@@ -28,7 +28,8 @@ export interface ResponseBase<T> {
 
 export class HttpError<T = any> extends Error {
   constructor(public response: ResponseBase<T>) {
-    super(`${response.status} for ${response.url}`);
+    super();
+    this.message = `${response.status} for ${response.url}: `+ JSON.stringify(response);
     this.name = 'HttpError';
   }
 }
@@ -49,7 +50,7 @@ export abstract class RequestHandler {
           ? prefix + '[' + p + ']'
           : p;
         const v: object | string | number | null | undefined = obj[p];
-        if (typeof obj[p] !== 'undefined' && !isNaN(obj[p])) {
+        if (typeof obj[p] !== 'undefined' && !(typeof obj[p] === 'number' && isNaN(obj[p]))) {
           const value: string = (v !== null && typeof v === 'object')
             ? RequestHandler.serialize(v, k)
             : encodeURIComponent(k) + '=' + encodeURIComponent(v as string);
