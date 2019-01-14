@@ -8,6 +8,11 @@ export namespace RequestFilters {
     infants?: number;
   }
 
+  export interface QuerySort {
+    key: string;
+    direction?: string;
+  }
+
   export interface AgesRangeDetail extends AgesRange {
     childAges?: number[];
   }
@@ -42,6 +47,7 @@ export namespace RequestFilters {
     type?: 'weekends' | 'weeks' | 'longs';
     hasHotels?: boolean;
     months?: Month[];
+    sort?: QuerySort;
   }
 
   export interface Routes {
@@ -72,13 +78,14 @@ export namespace RequestFilters {
   }
 
   export interface Pack {
-    budget: number;
+    budget?: number;
     outwardDate: string; // YYYY-MM-DD
     returnDate: string; // YYYY-MM-DD
     travelers: AgesRange;
     itineraries: Itinerary[];
     accomodations?: Accomodation;
     routes?: Routes;
+    sort?: QuerySort;
   }
 
   export interface PackOverview extends Pack {
@@ -98,6 +105,7 @@ export namespace RequestFilters {
     metersFromCenterMin?: number;
     metersFromCenterMax?: number;
     facilities?: string[];
+    sort?: QuerySort;
   }
 
   export interface HotelDetails {

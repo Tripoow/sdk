@@ -7,158 +7,236 @@ describe('Tripoow SDK test', () => {
     jest.setTimeout(100000);
   });
 
-  it('works if true is truthy', () => {
-    expect(true).toBeTruthy();
-  });
+  const test = new TripoowSDK<WebRequest>(WebRequest, 'development');
 
   it('TripoowSDK is instantiable', () => {
-    expect(new TripoowSDK<WebRequest>(WebRequest)).toBeInstanceOf(TripoowSDK);
+    return expect(test).toBeInstanceOf(TripoowSDK);
   });
 
-  it('TripoowSDK test request', async () => {
-    const test = new TripoowSDK<WebRequest>(WebRequest, 'development');
+  test.setLocale('it');
 
-    const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone2');
-    expect(auth.bearer).toBeTruthy();
-    /* HEADERS */
-    test.setAuthorization(auth.bearer);
-    test.setLocale('it');
+  describe('Authorization', () => {
 
-    const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
-    // console.log('BOOKINGS', responseBookings.results.expired[0]);
+    it('set Bearer', async () => {
+      const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone1');
+      test.setAuthorization(auth.bearer);
+      return expect(auth.bearer).toBeTruthy();
+    });
 
+    it('fetch Booking', async () => {
+      const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
+      // console.log('BOOKINGS', responseBookings.results.expired[0]);
+      return expect(responseBookings.results).toBeTruthy();
+    });
+
+  });
+
+  describe('Steps to Pack', () => {
     const budget: number = 500;
     const travelerAdults: number = 2;
     const suggest: string = 'cata';
     const hasHotels: boolean = true;
+    const temp: {
+      origin?: ResponseResults.Origin;
+      destination?: ResponseResults.Destination;
+      dates?: ResponseResults.Dates;
+    } = {};
 
-    const streamOrigin: RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> = test.streamOrigins({suggest: suggest});
-    const origins: ResponseResults.Origin[] = await streamOrigin.next();
-    expect(origins[0]).toBeTruthy();
-    // console.log('ORIGINS', origins[0]);
-
-    const streamDestinations: RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> = test.streamDestinations({
-      budget: budget,
-      originCode: origins[0].code,
-      hasHotels: hasHotels
+    it('f. Origins', async () => {
+      const streamOrigin: RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> = test.streamOrigins({suggest: suggest});
+      const origins: ResponseResults.Origin[] = await streamOrigin.next();
+      temp.origin = origins[0];
+      // console.log('ORIGINS', origins[0]);
+      return expect(origins[0]).toBeTruthy();
     });
-    const destinations: ResponseResults.Destination[] = await streamDestinations.next();
-    expect(destinations[0]).toBeTruthy();
-    // console.log('DESTINATIONS', destinations[0]);
 
-    const wiki: ResponseResults.DestinationWiki = await test.getDestinationWiki(destinations[0].code);
-    // console.log('WIKI', wiki);
-    const tags: ResponseResults.DestinationTag[] = await test.getDestinationTags(destinations[0].code);
-    // console.log('TAGS', tags);
-    const images: ResponseResults.DestinationImage[] = await test.getDestinationImages(destinations[0].code);
-    // console.log('IMAGES', images);
-
-    const streamDates: RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> = test.streamDates({
-      budget: budget,
-      type: 'weeks',
-      originCode: origins[0].code,
-      destinationCode: destinations[0].code,
-      hasHotels: hasHotels
-    });
-    const dates: ResponseResults.Dates[] = await streamDates.next();
-    expect(dates[0]).toBeTruthy();
-    const date: ResponseResults.Dates = dates[0];
-    // console.log('DATES', date);
-
-    const packsOverview: ResponseSDKBase<ResponseResults.PackOverview> = await test.getPacksOverview({
-      budget: budget,
-      outwardDate: date.outward,
-      returnDate: date.return,
-      travelers: {
-        adults: travelerAdults
-      },
-      itineraries: [
-        {
-          origin: {
-            code: origins[0].code,
-          },
-          destination: {
-            code: destinations[0].code
-          }
-        },
-        {
-          origin: {
-            code: destinations[0].code
-          },
-          destination: {
-            code: origins[0].code
-          }
-        }
-      ],
-      guests: [
-        {
-          adults: travelerAdults
-        }
-      ]
-    });
-    expect(packsOverview.results.cheapest).toBeTruthy();
-    // console.log('PACKOVERVIEW', packsOverview.results.cheapest);
-
-    const streamPacks: RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> = test.streamPacks({
-      budget: budget,
-      outwardDate: date.outward,
-      returnDate: date.return,
-      itineraries: [
-        {
-          origin: {
-            code: origins[0].code,
-          },
-          destination: {
-            code: destinations[0].code
-          }
-        },
-        {
-          origin: {
-            code: destinations[0].code
-          },
-          destination: {
-            code: origins[0].code
-          }
-        }
-      ],
-      travelers: {
-        adults: travelerAdults
+    it('f. Destinations', async () => {
+      if (!temp.origin) {
+        return false;
       }
+      const streamDestinations: RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> = test.streamDestinations({
+        budget: budget,
+        originCode: temp.origin.code,
+        hasHotels: hasHotels
+      });
+      const destinations: ResponseResults.Destination[] = await streamDestinations.next();
+      temp.destination = destinations[0];
+      // console.log('DESTINATIONS', destinations[0]);
+      return expect(destinations[0]).toBeTruthy();
     });
-    const packs: ResponseResults.Pack[] = await streamPacks.next();
-    expect(packs).toBeTruthy();
-    // console.log('PACKS', packs[0]);
 
-    const streamAccomodations: RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> = test.streamAccomodations({
-      priceNightMax: budget,
-      destinationCode: destinations[0].code,
-      checkin: date.outward,
-      checkout: date.return,
-      guests: [
-        {
+    describe('Destination Details', () => {
+      it('f. Wiki', async () => {
+        if (!temp.destination) {
+          return false;
+        }
+        const wiki: ResponseResults.DestinationWiki = await test.getDestinationWiki(temp.destination.code);
+        // console.log('WIKI', wiki);
+        return expect(wiki).toBeTruthy();
+      });
+
+      it('f. Tags', async () => {
+        if (!temp.destination) {
+          return false;
+        }
+        const tags: ResponseResults.DestinationTag[] = await test.getDestinationTags(temp.destination.code);
+        // console.log('TAGS', tags);
+        return expect(tags).toBeTruthy();
+      });
+
+      it('f. Images', async () => {
+        if (!temp.destination) {
+          return false;
+        }
+        const images: ResponseResults.DestinationImage[] = await test.getDestinationImages(temp.destination.code);
+        // console.log('IMAGES', images);
+        return expect(images).toBeTruthy();
+      });
+    });
+
+    it('f. Dates', async () => {
+      if (!temp.origin || !temp.destination) {
+        return false;
+      }
+      const streamDates: RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> = test.streamDates({
+        budget: budget,
+        type: 'weeks',
+        originCode: temp.origin.code,
+        destinationCode: temp.destination.code,
+        hasHotels: hasHotels
+      });
+      const dates: ResponseResults.Dates[] = await streamDates.next();
+      temp.dates = dates[0];
+      // console.log('DATES', date);
+      return expect(dates[0]).toBeTruthy();
+    });
+
+    it('f. Packs', async () => {
+      if (!temp.origin || !temp.destination || !temp.dates) {
+        return false;
+      }
+      const streamPacks: RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> = test.streamPacks({
+        budget: budget,
+        outwardDate: temp.dates.outward,
+        returnDate: temp.dates.return,
+        itineraries: [
+          {
+            origin: {
+              code: temp.origin.code,
+            },
+            destination: {
+              code: temp.destination.code
+            }
+          },
+          {
+            origin: {
+              code: temp.destination.code
+            },
+            destination: {
+              code: temp.origin.code
+            }
+          }
+        ],
+        travelers: {
           adults: travelerAdults
         }
-      ]
+      });
+      const packs: ResponseResults.Pack[] = await streamPacks.next();
+      // console.log('PACKS', packs[0]);
+      return expect(packs).toBeTruthy();
     });
-    const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
-    expect(accomodations).toBeTruthy();
-    console.log('ACCOMODATIONS', accomodations[0]);
 
-    const hotelDetails: ResponseSDKBase<ResponseResults.Accomodation> = await test.getHotelDetails({
-      checkin: accomodations[0].checkin,
-      checkout: accomodations[0].checkout,
-      destinationCode: destinations[0].code,
-      guests: [
-        {
-          adults: travelerAdults
+    it('f. Accomodations', async () => {
+      if (!temp.origin || !temp.destination || !temp.dates) {
+        return false;
+      }
+      const streamAccomodations: RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> = test.streamAccomodations({
+        priceNightMax: budget,
+        destinationCode: temp.destination.code,
+        checkin: temp.dates.outward,
+        checkout: temp.dates.return,
+        guests: [
+          {
+            adults: travelerAdults
+          }
+        ]
+      });
+      const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
+      expect(accomodations).toBeTruthy();
+      console.log('ACCOMODATIONS', accomodations[0]);
+
+      const hotelDetails: ResponseSDKBase<ResponseResults.Accomodation> = await test.getHotelDetails({
+        checkin: accomodations[0].checkin,
+        checkout: accomodations[0].checkout,
+        destinationCode: temp.destination.code,
+        guests: [
+          {
+            adults: travelerAdults
+          }
+        ],
+        id: accomodations[0].id
+      });
+      expect(hotelDetails.results).toBeTruthy();
+      console.log('HOTELDETAILS', hotelDetails.results);
+    });
+
+
+    describe('Packs', () => {
+
+      const tempPack: {
+        pack?: ResponseResults.Pack;
+      } = {};
+
+      it('f. Packs Overview', async () => {
+        if (!temp.origin || !temp.destination || !temp.dates) {
+          return false;
         }
-      ],
-      id: accomodations[0].id
-    });
-    expect(hotelDetails.results).toBeTruthy();
-    console.log('HOTELDETAILS', hotelDetails.results);
+        const packsOverview: ResponseSDKBase<ResponseResults.PackOverview> = await test.getPacksOverview({
+          budget: budget,
+          outwardDate: temp.dates.outward,
+          returnDate: temp.dates.return,
+          travelers: {
+            adults: travelerAdults
+          },
+          itineraries: [
+            {
+              origin: {
+                code: temp.origin.code,
+              },
+              destination: {
+                code: temp.destination.code
+              }
+            },
+            {
+              origin: {
+                code: temp.destination.code
+              },
+              destination: {
+                code: temp.origin.code
+              }
+            }
+          ],
+          guests: [
+            {
+              adults: travelerAdults
+            }
+          ]
+        });
+        // console.log('PACKOVERVIEW', packsOverview.results.cheapest);
+        tempPack.pack = packsOverview.results.cheapest;
+        return expect(packsOverview.results.cheapest).toBeTruthy();
+      });
 
-    const responsePackCheck: ResponseSDKBase<ResponseResults.PackCheck> = await test.getPackCheck(packs[0].token);
-    // console.log('PACKCHECK', responsePackCheck.results);
+      it('f. Pack Check', async () => {
+      if (!tempPack.pack) {
+        return false;
+      }
+        const responsePackCheck: ResponseSDKBase<ResponseResults.PackCheck> = await test.getPackCheck(tempPack.pack.token);
+        console.log('PACKCHECK', responsePackCheck.results);
+        return expect(responsePackCheck.results).toBeTruthy();
+      });
+    });
+
   });
+
 });
