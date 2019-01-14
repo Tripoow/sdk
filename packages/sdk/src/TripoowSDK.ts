@@ -163,8 +163,8 @@ export class TripoowSDK<R extends RequestHandler> {
             daysMax: filters.daysMax,
             hasHotels: filters.hasHotels,
             city: filters.suggest,
-            tagsCode: filters.tagsCode,
-            continentsCode: filters.continentsCode
+            tags: filters.tagsCode,
+            continents: filters.continentsCode
           }
         }
       }
