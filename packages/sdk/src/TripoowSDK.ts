@@ -274,6 +274,16 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
+  public async postPackBooking(filters: RequestFilters.Booking.Pack): Promise<ResponseSDKBase<string>> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.post<ResponseSDKBase<string>>(this.baseUrl + 'packs/booking', {
+      data: {
+        pack: filters
+      }
+    });
+    return response;
+  }
+
   public streamAccomodations(filters: RequestFilters.Accomodation): RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     return request.createStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>>(

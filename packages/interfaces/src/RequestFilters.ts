@@ -103,6 +103,80 @@ export namespace RequestFilters {
     guests: AgesRangeDetail[];
   }
 
+  export namespace Booking {
+
+    export interface Payment {
+      firstname: string;
+      lastname: string;
+      email: string;
+      cardType: string;
+      cardExpiration: string; // YYYY-MM
+      cardNumber: string;
+      cardCVC: string;
+    }
+
+    export interface Room {
+      id: string;
+      guests: {
+        firstname: string;
+        lastname: string;
+        note?: string;
+      }[];
+    }
+
+    export interface Hotel {
+      productId: string;
+      productBoardBaseId: string;
+      rooms: Room[];
+    }
+
+    export interface Bag {
+      type: 'hand' | 'hold' | 'personal';
+      total: number;
+    }
+
+    export interface Passenger {
+      firstname: string;
+      lastname: string;
+      nationality: string; // ISO 3166-1
+      gender: 'male' | 'female'; // Mr and Ms
+      birthdate: string; // YYYY-MM-DD
+      cardNo: string;
+      cardExpiration: string; // YYYY-MM
+      priorityBoarding?: boolean;
+      bags: Bag[];
+      insurance: 'none' | 'basic' | 'plus';
+    }
+
+    export interface Flight {
+      passengers: Passenger[];
+    }
+
+    export interface Contact {
+      firstname: string;
+      lastname: string;
+      email: string;
+      phone: string;
+    }
+
+    export interface Item {
+      ids: string[];
+      type: 'hotel' | 'flight';
+      hotel?: Hotel;
+      flight?: Flight;
+    }
+
+    export interface Pack {
+      token: string;
+      segments: Item[];
+      activities: Item[];
+      contact: Contact;
+      payment: Payment;
+      discountCode?: string;
+      useCredit: boolean;
+    }
+  }
+
   export interface Accomodation {
     checkin: string;
     checkout: string;
