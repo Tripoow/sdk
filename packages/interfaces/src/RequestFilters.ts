@@ -19,6 +19,7 @@ export namespace RequestFilters {
 
   export interface Origin {
     suggest?: string;
+    countries?: 'all';
     pos?: {
       lat: string;
       lon: string;

@@ -91,45 +91,54 @@ export class TripoowSDK<R extends RequestHandler> {
       filters?: RequestFilters.Origin
     ): RequestBaseData | undefined => {
       if (filters) {
-        if (filters.suggest) {
-          return {
-            limit: this.defaultLimit,
-            page: 0,
-            filter_groups: [
+        const filterGroups: any[] = [];
+        if (filters.countries) {
+          filterGroups.push({
+            filters: [
               {
-                filters: [
-                  {
-                    key: 'place',
-                    operator: 'ct',
-                    value: filters.suggest
-                  }
-                ]
+                key: 'countries',
+                operator: 'ct',
+                value: filters.countries
               }
             ]
-          };
+          });
+        }
+        if (filters.suggest) {
+          filterGroups.push({
+            filters: [
+              {
+                key: 'place',
+                operator: 'ct',
+                value: filters.suggest
+              }
+            ]
+          });
         }
         if (filters.pos) {
-          return {
-            limit: this.defaultLimit,
-            page: 0,
-            filter_groups: [
+          filterGroups.push({
+            filters: [
               {
-                filters: [
-                  {
-                    key: 'lat',
-                    operator: 'eq',
-                    value: filters.pos.lat
-                  },
-                  {
-                    key: 'lon',
-                    operator: 'eq',
-                    value: filters.pos.lon
-                  }
-                ]
+                key: 'lat',
+                operator: 'eq',
+                value: filters.pos.lat
               }
             ]
-          };
+          });
+          filterGroups.push({
+            filters: [
+              {
+                key: 'lat',
+                operator: 'eq',
+                value: filters.pos.lon
+              }
+            ]
+          });
         }
+        return {
+          limit: this.defaultLimit,
+          page: 0,
+          filter_groups: filterGroups
+        };
       }
       return {
         limit: this.defaultLimit,
