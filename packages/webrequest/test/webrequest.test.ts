@@ -1,7 +1,14 @@
 import { WebRequest } from '../src/index';
 import { Headers } from '@tripoow/interfaces';
 
-describe('WebRequest SDK test', () => {
+interface WArticle {
+  id: number;
+  linK: string;
+  date: string;
+  author: number;
+}
+
+describe('WebRequest', () => {
   it('works?', () => {
     const web: WebRequest = new WebRequest();
     expect(web).toBeTruthy();
@@ -31,5 +38,20 @@ describe('WebRequest SDK test', () => {
         console.log(error);
         expect(error).toBeTruthy();
       });
+  });
+
+  it('tripoow blog', () => {
+    const web: WebRequest = new WebRequest();
+    web.get<any>('https://tripoow.com/wp-json/wp/v2/posts', {
+      headers: new Headers([
+        [ 'User-Agent', 'Request-Promise']
+      ])
+    })
+    .then((response) => {
+      expect(response).toBeTruthy();
+    })
+    .catch(() => {
+      expect(true).toBe(false);
+    });
   });
 });

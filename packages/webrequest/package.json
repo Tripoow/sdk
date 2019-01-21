@@ -27,10 +27,7 @@
   },
   "dependencies": {
     "@tripoow/interfaces": "^2.6.0",
-    "@types/request": "~2.47.1",
-    "@types/request-promise-native": "^1.0.15",
-    "request": "~2.88.0",
-    "request-promise-native": "^1.0.5"
+    "axios": "0.18.0"
   },
   "private": false,
   "keywords": [],

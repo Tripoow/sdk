@@ -18,15 +18,25 @@ describe('Tripoow SDK test', () => {
   describe('Authorization', () => {
 
     it('set Bearer', async () => {
-      const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone');
-      test.setAuthorization(auth.bearer);
-      return expect(auth.bearer).toBeTruthy();
+      try {
+        const auth: ResponseResults.Authorization = await test.getBearer('bloren93@gmail.com', 'laurabartolone');
+        test.setAuthorization(auth.bearer);
+        return expect(auth.bearer).toBeTruthy();
+      } catch (error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
     it('fetch Booking', async () => {
-      const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
-      // console.log('BOOKINGS', responseBookings.results.expired[0]);
-      return expect(responseBookings.results).toBeTruthy();
+      try {
+        const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
+        // console.log('BOOKINGS', responseBookings.results.expired[0]);
+        return expect(responseBookings.results).toBeTruthy();
+      } catch (error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
   });
@@ -44,10 +54,15 @@ describe('Tripoow SDK test', () => {
 
     it('f. Origins', async () => {
       const streamOrigin: RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> = test.streamOrigins({suggest: suggest});
-      const origins: ResponseResults.Origin[] = await streamOrigin.next();
-      temp.origin = origins[0];
-      // console.log('ORIGINS', origins[0]);
-      return expect(origins[0]).toBeTruthy();
+      try {
+        const origins: ResponseResults.Origin[] = await streamOrigin.next();
+        temp.origin = origins[0];
+        // console.log('Sel. Origin', temp.origin);
+        return expect(origins[0]).toBeTruthy();
+      } catch (error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
     it('f. Destinations', async () => {
@@ -59,10 +74,15 @@ describe('Tripoow SDK test', () => {
         originCode: temp.origin.code,
         hasHotels: hasHotels
       });
-      const destinations: ResponseResults.Destination[] = await streamDestinations.next();
-      temp.destination = destinations[0];
-      // console.log('DESTINATIONS', destinations[0]);
-      return expect(destinations[0]).toBeTruthy();
+      try {
+        const destinations: ResponseResults.Destination[] = await streamDestinations.next();
+        temp.destination = destinations[0];
+        // console.log('Sel. Destination', temp.destination);
+        return expect(destinations[0]).toBeTruthy();
+      } catch (error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
     describe('Destination Details', () => {
@@ -107,8 +127,8 @@ describe('Tripoow SDK test', () => {
       });
       const dates: ResponseResults.Dates[] = await streamDates.next();
       temp.dates = dates[0];
-      // console.log('DATES', date);
-      return expect(dates[0]).toBeTruthy();
+      // console.log('Sel. Dates', temp.dates);
+      return expect(dates).toBeTruthy();
     });
 
     it('f. Packs', async () => {
@@ -141,9 +161,14 @@ describe('Tripoow SDK test', () => {
           adults: travelerAdults
         }
       });
-      const packs: ResponseResults.Pack[] = await streamPacks.next();
-      // console.log('PACKS', packs[0]);
-      return expect(packs).toBeTruthy();
+      try {
+        const packs: ResponseResults.Pack[] = await streamPacks.next();
+        // console.log('STREAM-PACKS', packs[0]);
+        return expect(packs).toBeTruthy();
+      } catch(error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
     it('f. Accomodations', async () => {
@@ -161,23 +186,27 @@ describe('Tripoow SDK test', () => {
           }
         ]
       });
-      const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
-      expect(accomodations).toBeTruthy();
-      // console.log('ACCOMODATIONS', accomodations[0]);
-
-      const hotelDetails: ResponseSDKBase<ResponseResults.Accomodation> = await test.getHotelDetails({
-        checkin: accomodations[0].checkin,
-        checkout: accomodations[0].checkout,
-        destinationCode: temp.destination.code,
-        guests: [
-          {
-            adults: travelerAdults
-          }
-        ],
-        id: accomodations[0].id
-      });
-      expect(hotelDetails.results).toBeTruthy();
-      // console.log('HOTEL-DETAILS', hotelDetails.results);
+      try {
+        const accomodations: ResponseResults.Accomodation[] = await streamAccomodations.next();
+        // console.log('STREAM-ACCOMODATIONS', accomodations[0]);
+        expect(accomodations).toBeTruthy();
+        const hotelDetails: ResponseSDKBase<ResponseResults.Accomodation> = await test.getHotelDetails({
+          checkin: accomodations[0].checkin,
+          checkout: accomodations[0].checkout,
+          destinationCode: temp.destination.code,
+          guests: [
+            {
+              adults: travelerAdults
+            }
+          ],
+          id: accomodations[0].id
+        });
+        // console.log('HOTEL-DETAILS', hotelDetails.results);
+        expect(hotelDetails.results).toBeTruthy();
+      } catch(error) {
+        console.log(error);
+        expect(error).not.toBeTruthy();
+      }
     });
 
 
@@ -222,7 +251,7 @@ describe('Tripoow SDK test', () => {
             }
           ]
         });
-        // console.log('PACKOVERVIEW', packsOverview.results.cheapest);
+        console.log('PACKOVERVIEW', packsOverview.results.cheapest);
         tempPack.pack = packsOverview.results.cheapest;
         return expect(packsOverview.results.cheapest).toBeTruthy();
       });
@@ -239,6 +268,7 @@ describe('Tripoow SDK test', () => {
           }
         });
         // console.log('PACK-CROSSOVER', responsePackCrossover.results);
+        return expect(responsePackCrossover.results).toBeTruthy();
       });
 
       it('f. Pack Check', async () => {
