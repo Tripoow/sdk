@@ -95,29 +95,29 @@ export abstract class RequestHandler {
     return request;
   }
 
-  public abstract async handle<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(requestCore: RequestCore<D>): Promise<T>;
+  public abstract async handle<T = any, D extends Data = Data>(requestCore: RequestCore<D>): Promise<T>;
 
   public createStream<Results = any, Response extends ResponseBase<Results[]> = ResponseBase<Results[]>>(url: string, options: RequestOptions<any>): RequestStream<Results, Response> {
     return new RequestStream<Results, Response>(this, url, options);
   }
 
-  public async get<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
+  public async get<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('get', url, options));
   }
 
-  public async post<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
+  public async post<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('post', url, options));
   }
 
-  public async put<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
+  public async put<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('put', url, options));
   }
 
-  public async patch<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
+  public async patch<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('patch', url, options));
   }
 
-  public async delete<T extends ResponseBase<any> = ResponseBase<any>, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
+  public async delete<T = any, D extends Data = Data>(url: string, options?: RequestOptions<D>): Promise<T> {
     return this.handle<T, D>(this.buildRequest<D>('delete', url, options));
   }
 }
