@@ -42,7 +42,7 @@ describe('WebRequest', () => {
 
   it('tripoow blog', () => {
     const web: WebRequest = new WebRequest();
-    web.get<any>('https://tripoow.com/wp-json/wp/v2/posts', {
+    web.get<WArticle[]>('https://tripoow.com/wp-json/wp/v2/posts', {
       headers: new Headers([
         [ 'User-Agent', 'Request-Promise']
       ])

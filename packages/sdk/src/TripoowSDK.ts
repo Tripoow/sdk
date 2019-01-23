@@ -30,12 +30,12 @@ export interface RequestBaseData extends Data {
 
 export class TripoowSDK<R extends RequestHandler> {
   private baseUrl: string;
-  private defaultHeaders: Headers;
   private defaultLimit = 20;
 
   constructor(
     protected builderRequest: new (defaultHeaders?: Headers) => R,
-    protected env: Environment = 'production'
+    protected env: Environment = 'production',
+    protected defaultHeaders: Headers = new Headers()
   ) {
     switch (this.env) {
       case 'development':
@@ -48,7 +48,6 @@ export class TripoowSDK<R extends RequestHandler> {
         this.baseUrl = 'https://api.tripoow.com/';
         break;
     }
-    this.defaultHeaders = new Headers([['User-Agent', 'Request-Promise']]);
   }
 
   public async authenticate(apiKey: string, apiSecret: string): Promise<boolean>;

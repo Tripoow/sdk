@@ -1,13 +1,13 @@
 import { TripoowSDK, ResponseSDKBase } from '../src/index';
 import { WebRequest } from '@tripoow/webrequest';
-import { ResponseResults, RequestStream } from '@tripoow/interfaces';
+import { ResponseResults, RequestStream, Headers } from '@tripoow/interfaces';
 
 describe('Tripoow SDK test', () => {
   beforeEach(() => {
     jest.setTimeout(100000);
   });
 
-  const test = new TripoowSDK<WebRequest>(WebRequest, 'development');
+  const test = new TripoowSDK<WebRequest>(WebRequest, 'development', new Headers([['User-Agent', 'TripoowSDK']]));
 
   it('TripoowSDK is instantiable', () => {
     return expect(test).toBeInstanceOf(TripoowSDK);
