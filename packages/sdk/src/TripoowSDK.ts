@@ -192,7 +192,8 @@ export class TripoowSDK<R extends RequestHandler> {
             budget: filters.budget,
             hasHotels: filters.hasHotels,
             months: filters.months
-          }
+          },
+          sort: filters.sort
         }
       }
     );
@@ -210,7 +211,8 @@ export class TripoowSDK<R extends RequestHandler> {
             budget: filters.budget,
             hasHotels: filters.hasHotels,
             months: filters.months
-          }
+          },
+          sort: filters.sort
         }
       }
     );
@@ -246,7 +248,8 @@ export class TripoowSDK<R extends RequestHandler> {
         data: {
           limit: this.defaultLimit,
           page: 0,
-          packs: filters
+          packs: filters,
+          sort: filters.sort
         }
       }
     );
@@ -311,7 +314,8 @@ export class TripoowSDK<R extends RequestHandler> {
             metersFromCenterMin: filters.metersFromCenterMin,
             metersFromCenterMax: filters.metersFromCenterMax,
             facilities: filters.facilities,
-          }
+          },
+          sort: filters.sort
         }
       }
     );
