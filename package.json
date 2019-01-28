@@ -20,6 +20,8 @@
   "scripts": {
     "lerna": "lerna",
     "build": "lerna run build",
+    "prepublish": "yarn run build",
+    "publish": "yarn run lerna publish",
     "clean": "rimraf ./packages/*/dist ./packages/*/docs",
     "clean:all": "rimraf ./packages/*/node_modules && yarn run clean",
     "lint": "lerna run lint",
