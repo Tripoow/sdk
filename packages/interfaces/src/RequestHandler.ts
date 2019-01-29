@@ -26,11 +26,11 @@ export interface ResponseBase<T> {
   [key: string]: any;
 }
 
-export class HttpError<T = any> extends Error {
-  constructor(public response: ResponseBase<T>) {
-    super();
+export class HttpError extends Error {
+  constructor(public response: ResponseBase<any>) {
+    super(`${response.status} for ${response.url}: `+ JSON.stringify(response))
     this.message = `${response.status} for ${response.url}: `+ JSON.stringify(response);
-    this.name = 'HttpError';
+    this.name = this.constructor.name;
   }
 }
 

@@ -19,7 +19,7 @@ export class WebRequest extends RequestHandler {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        throw new HttpError<T>({
+        throw new HttpError({
           results: error.response.data,
           status: error.response.status,
           url: error.config.url
@@ -33,7 +33,6 @@ export class WebRequest extends RequestHandler {
         // Something happened in setting up the request that triggered an Error
         // console.log('Error', error.message);
       }
-      console.log(error.config);
       throw error;
     }
   }
