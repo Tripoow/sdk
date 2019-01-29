@@ -29,6 +29,7 @@ export interface ResponseBase<T> {
 export class HttpError extends Error {
   constructor(public response: ResponseBase<any>) {
     super(`${response.status} for ${response.url}: `+ JSON.stringify(response))
+    Object.setPrototypeOf(this, HttpError.prototype);
     this.message = `${response.status} for ${response.url}: `+ JSON.stringify(response);
     this.name = this.constructor.name;
   }

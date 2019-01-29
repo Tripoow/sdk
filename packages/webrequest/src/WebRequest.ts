@@ -19,11 +19,9 @@ export class WebRequest extends RequestHandler {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        throw new HttpError({
-          results: error.response.data,
-          status: error.response.status,
-          url: error.config.url
-        });
+        error.response.data.url = error.config.url;
+        error.response.data.status = error.response.status;
+        throw new HttpError(error.response.data);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

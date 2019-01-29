@@ -1,5 +1,5 @@
 import { WebRequest } from '../src/index';
-import { Headers } from '@tripoow/interfaces';
+import { Headers, HttpError } from '@tripoow/interfaces';
 
 interface WArticle {
   id: number;
@@ -35,8 +35,20 @@ describe('WebRequest', () => {
         expect(response).toBeTruthy();
       })
       .catch(error => {
-        console.log(error);
         expect(error).toBeTruthy();
+      });
+
+      web
+      .get('http://api.tripoow.com/bookings', {
+        headers: new Headers([
+          [ 'User-Agent', 'Request-Promise' ]
+        ])
+      })
+      .then((response) => {
+        expect(response).toBeTruthy();
+      })
+      .catch(error => {
+        expect(error).toBeInstanceOf(HttpError);
       });
   });
 
