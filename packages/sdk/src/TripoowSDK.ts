@@ -373,8 +373,7 @@ export class TripoowSDK<R extends RequestHandler> {
     filters?: Filters
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
-    return response;
+    return request.get<ResponseSDKBase<Results>>(this.baseUrl + url, filters);;
   }
 
   public async post<Filters, Results>(
@@ -382,7 +381,6 @@ export class TripoowSDK<R extends RequestHandler> {
     filters?: Filters
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
-    return response;
+    return request.post<ResponseSDKBase<Results>>(this.baseUrl + url, filters);;
   }
 }
