@@ -48,7 +48,7 @@ export namespace RequestFilters {
     type?: 'weekends' | 'weeks' | 'longs';
     hasHotels?: boolean;
     months?: Month[];
-    sort?: QuerySort;
+    sort?: QuerySort[];
   }
 
   export interface Routes {
@@ -86,7 +86,7 @@ export namespace RequestFilters {
     itineraries: Itinerary[];
     accomodations?: Accomodation;
     routes?: Routes;
-    sort?: QuerySort;
+    sort?: QuerySort[];
   }
 
   export interface PackCrossover {
@@ -191,7 +191,7 @@ export namespace RequestFilters {
     metersFromCenterMin?: number;
     metersFromCenterMax?: number;
     facilities?: string[];
-    sort?: QuerySort;
+    sort?: QuerySort[];
   }
 
   export interface HotelDetails {

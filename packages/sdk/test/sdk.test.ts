@@ -31,7 +31,7 @@ describe('Tripoow SDK test', () => {
     it('fetch Booking', async () => {
       try {
         const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
-        // console.log('BOOKINGS', responseBookings.results.expired[0]);
+        // console.log('BOOKINGS', responseBookings.results);
         return expect(responseBookings.results).toBeTruthy();
       } catch (error) {
         console.log(error);
@@ -143,6 +143,7 @@ describe('Tripoow SDK test', () => {
           {
             origin: {
               code: temp.origin.code,
+              departureDate: temp.dates.outward
             },
             destination: {
               code: temp.destination.code
@@ -150,7 +151,8 @@ describe('Tripoow SDK test', () => {
           },
           {
             origin: {
-              code: temp.destination.code
+              code: temp.destination.code,
+              departureDate: temp.dates.return
             },
             destination: {
               code: temp.origin.code

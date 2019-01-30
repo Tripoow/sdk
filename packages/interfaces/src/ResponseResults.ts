@@ -375,9 +375,16 @@ export namespace ResponseResults {
       email: string;
       phone: string;
     };
-    user: {[key: string]: string};
+    pack: Pack | null;
+    user: {
+      email: string;
+      [key: string]: string
+    };
     services: {[key: string]: any} | null;
-    servicesCount?: {[key: string]: any};
+    servicesCount: {
+      flights: number;
+      hotels: number;
+    };
     city: Destination;
   }
 
