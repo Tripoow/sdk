@@ -201,7 +201,7 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getDatesOverview(filters: RequestFilters.Dates): Promise<ResponseSDKBase<ResponseResults.DatesOverview>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseSDKBase<ResponseResults.DatesOverview>>(
+    const response = await request.get<ResponseSDKBase<ResponseResults.DatesOverview>>(
       this.baseUrl + 'destinations/' + filters.destinationCode + '/dates', {
         data: {
           limit: this.defaultLimit,
