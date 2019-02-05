@@ -36,6 +36,8 @@ export namespace ResponseResults {
   }
 
   export interface City {
+    name: string;
+    code: string;
     country?: string;
     continent?: string;
     iataCode?: string;
@@ -362,6 +364,30 @@ export namespace ResponseResults {
     }
   }
 
+  export interface Payment {
+    pay_amount: number;
+    price_deal: number | null;
+  }
+
+  export interface BookingServiceFlight {
+    bkf_id: number;
+    bookingId: string | null;
+    bookingStatus: 'pending' | 'failed' | string;
+    id: string;
+    itineraries: Itinerary[];
+    pack_service_id: number;
+    price: Price;
+    prices: PriceDetail[];
+    travelers: Travelers;
+  }
+
+  export interface BookingServiceHotel {
+    bkg_id: number;
+    pack_service_id: number;
+    bookingCode: string;
+    bookingStatus: 'pending' | 'failed' | string;
+  }
+
   export interface Booking {
     id: number;
     departureDate: string;
@@ -370,8 +396,8 @@ export namespace ResponseResults {
     status: 'pending' | 'failed' | string;
     price: Price;
     contact: {
-      firstname: string;
-      lastname: string;
+      firstName: string;
+      lastName: string;
       email: string;
       phone: string;
     };
@@ -380,12 +406,16 @@ export namespace ResponseResults {
       email: string;
       [key: string]: string
     };
-    services: {[key: string]: any} | null;
+    services: {
+      flights?: BookingServiceFlight;
+      hotels?: BookingServiceHotel;
+    } | null;
     servicesCount: {
       flights: number;
       hotels: number;
     };
-    city: Destination;
+    city: City;
+    payment: Payment;
   }
 
   export interface Bookings {

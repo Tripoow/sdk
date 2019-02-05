@@ -32,7 +32,9 @@ describe('Tripoow SDK test', () => {
       try {
         const responseBookings: ResponseSDKBase<ResponseResults.Bookings> = await test.getBookings();
         // console.log('BOOKINGS', responseBookings.results);
-        return expect(responseBookings.results).toBeTruthy();
+        expect(responseBookings.results).toBeTruthy();
+        const booking = await test.getBookingDetails(responseBookings.results.active[0].code);
+        return expect(booking).toBeTruthy();
       } catch (error) {
         console.log(error);
         expect(error).not.toBeTruthy();

@@ -368,6 +368,16 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
+  public async getBookingDetails(bookingCode: string): Promise<ResponseResults.Booking> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const responses = await Promise.all([
+      request.get<ResponseSDKBase<ResponseResults.Booking>>(this.baseUrl + 'bookings/' + bookingCode),
+      request.get<ResponseSDKBase<ResponseResults.Payment>>(this.baseUrl + 'bookings/' + bookingCode + '/payment'),
+    ]);
+    responses[0].results.payment = responses[1].results;
+    return responses[0].results;
+  }
+
   public async get<Filters, Results>(
     url: string,
     filters?: Filters
