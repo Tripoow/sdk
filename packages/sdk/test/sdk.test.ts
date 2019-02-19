@@ -47,7 +47,7 @@ describe('Tripoow SDK test', () => {
     const budget: number = 500;
     const travelerAdults: number = 2;
     const suggest: string = 'cata';
-    const hasHotels: boolean = true;
+    const hasHotel: boolean = true;
     const temp: {
       origin?: ResponseResults.Origin;
       destination?: ResponseResults.Destination;
@@ -74,7 +74,7 @@ describe('Tripoow SDK test', () => {
       const streamDestinations: RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> = test.streamDestinations({
         budget: budget,
         originCode: temp.origin.code,
-        hasHotels: hasHotels
+        hasHotel: hasHotel
       });
       try {
         const destinations: ResponseResults.Destination[] = await streamDestinations.next();
@@ -125,7 +125,7 @@ describe('Tripoow SDK test', () => {
         type: 'weeks',
         originCode: temp.origin.code,
         destinationCode: temp.destination.code,
-        hasHotels: hasHotels
+        hasHotel: hasHotel
       });
       const dates: ResponseResults.Dates[] = await streamDates.next();
       temp.dates = dates[0];

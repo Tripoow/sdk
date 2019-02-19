@@ -35,7 +35,7 @@ export namespace RequestFilters {
     datesTo?: string;
     daysMin?: number;
     daysMax?: number;
-    hasHotels?: boolean;
+    hasHotel?: boolean;
     suggest?: string;
     tagsCode?: string[];
     continentsCode?: string[];
@@ -46,7 +46,7 @@ export namespace RequestFilters {
     originCode: string;
     destinationCode: string;
     type?: 'weekends' | 'weeks' | 'longs';
-    hasHotels?: boolean;
+    hasHotel?: boolean;
     months?: Month[];
     sort?: QuerySort[];
   }

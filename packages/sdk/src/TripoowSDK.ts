@@ -169,7 +169,7 @@ export class TripoowSDK<R extends RequestHandler> {
             datesTo: filters.datesTo,
             daysMin: filters.daysMin,
             daysMax: filters.daysMax,
-            hasHotels: filters.hasHotels,
+            hasHotel: filters.hasHotel ? '1' : '0',
             city: filters.suggest,
             tags: filters.tagsCode,
             continents: filters.continentsCode
@@ -190,7 +190,7 @@ export class TripoowSDK<R extends RequestHandler> {
             originCode: filters.originCode,
             type: filters.type,
             budget: filters.budget,
-            hasHotels: filters.hasHotels,
+            hasHotel: filters.hasHotel ? '1' : '0',
             months: filters.months
           },
           sort: filters.sort
@@ -209,7 +209,7 @@ export class TripoowSDK<R extends RequestHandler> {
           destinations: {
             originCode: filters.originCode,
             budget: filters.budget,
-            hasHotels: filters.hasHotels,
+            hasHotel: filters.hasHotel,
             months: filters.months
           },
           sort: filters.sort
