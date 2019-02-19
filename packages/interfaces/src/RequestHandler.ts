@@ -35,6 +35,14 @@ export class HttpError extends Error {
   }
 }
 
+export class StreamError extends Error {
+  constructor(message: string, public type: 'Pending' | 'NoPageFound') {
+    super(message)
+    Object.setPrototypeOf(this, StreamError.prototype);
+    this.name = this.constructor.name;
+  }
+}
+
 export abstract class RequestHandler {
 
   constructor(
@@ -143,14 +151,14 @@ export class RequestStream<T = any, Response extends ResponseBase<T[]> = Respons
     }
 
     if (this.status === 'pending') {
-      throw new Error();
+      throw new StreamError('Status of stream is still in pending', 'Pending');
     }
 
     if (this.status === 'ready') {
       try {
         this.options.data.page += 1;
       } catch(Error) {
-        throw new Error();
+        throw new StreamError('No page attribute found on options data', 'NoPageFound');
       }
     }
 
@@ -164,6 +172,10 @@ export class RequestStream<T = any, Response extends ResponseBase<T[]> = Respons
     }
 
     return response.results;
+  }
+
+  public getStreamStatus(): 'ready' | 'pending' | 'complete' | 'firstTime' {
+    return this.status;
   }
 
   public response(): Response | undefined {
