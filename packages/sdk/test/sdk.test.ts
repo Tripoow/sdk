@@ -108,7 +108,7 @@ describe('Tripoow SDK test', () => {
         const detail: ResponseResults.Destination = await test.getDestinationDetails(
           temp.destination.code
         );
-        console.log('Details', detail);
+        // console.log('Details', detail);
         return expect(detail).toBeTruthy();
       });
 
