@@ -296,7 +296,7 @@ describe('Tripoow SDK test', () => {
             }
           ]
         });
-        console.log('PACKOVERVIEW', packsOverview.results.cheapest);
+        // console.log('PACKOVERVIEW', packsOverview.results.cheapest);
         tempPack.pack = packsOverview.results.cheapest;
         return expect(packsOverview.results.cheapest).toBeTruthy();
       });
