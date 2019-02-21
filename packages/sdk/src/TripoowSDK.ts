@@ -4,7 +4,7 @@ import {
   RequestFilters,
   ResponseResults,
   Data,
-  RequestStream,
+  RequestStream
 } from '@tripoow/interfaces';
 
 export interface ResponseSDKBase<T> {
@@ -12,7 +12,7 @@ export interface ResponseSDKBase<T> {
   message: string;
   results: T;
   status: number;
-  metaQuery?: {[key: string]: any};
+  metaQuery?: { [key: string]: any };
 }
 
 export type Environment = 'production' | 'stage' | 'development';
@@ -59,12 +59,15 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getBearer(user: string, password: string): Promise<ResponseResults.Authorization> {
     const request: RequestHandler = new this.builderRequest(this.defaultHeaders);
-    const response = await request.post<ResponseSDKBase<ResponseResults.AuthLogin>>(this.baseUrl + 'auth/login', {
-      data: {
-        email: user,
-        password: password
+    const response = await request.post<ResponseSDKBase<ResponseResults.AuthLogin>>(
+      this.baseUrl + 'auth/login',
+      {
+        data: {
+          email: user,
+          password: password
+        }
       }
-    });
+    );
     return {
       bearer: response.results.access_token,
       expiresIn: response.results.expires_in
@@ -85,7 +88,9 @@ export class TripoowSDK<R extends RequestHandler> {
     }
   }
 
-  public streamOrigins(filters?: RequestFilters.Origin): RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> {
+  public streamOrigins(
+    filters?: RequestFilters.Origin
+  ): RequestStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>> {
     const refactorData: (filters?: RequestFilters.Origin) => RequestBaseData | undefined = (
       filters?: RequestFilters.Origin
     ): RequestBaseData | undefined => {
@@ -147,42 +152,49 @@ export class TripoowSDK<R extends RequestHandler> {
     const originsData = refactorData(filters);
     const request: R = new this.builderRequest(this.defaultHeaders);
     return request.createStream<ResponseResults.Origin, ResponseSDKBase<ResponseResults.Origin[]>>(
-      this.baseUrl + 'cities_beepry', {
+      this.baseUrl + 'cities_beepry',
+      {
         data: originsData
       }
     );
   }
 
-  public streamDestinations(filters: RequestFilters.Destination): RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> {
+  public streamDestinations(
+    filters: RequestFilters.Destination
+  ): RequestStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    return request.createStream<ResponseResults.Destination, ResponseSDKBase<ResponseResults.Destination[]>>(
-      this.baseUrl + 'destinations', {
-        data: {
-          limit: this.defaultLimit,
-          page: 0,
-          destinations: {
-            originCode: filters.originCode,
-            budget: filters.budget,
-            budgetFrom: filters.budgetFrom,
-            months: filters.months,
-            datesFrom: filters.datesFrom,
-            datesTo: filters.datesTo,
-            daysMin: filters.daysMin,
-            daysMax: filters.daysMax,
-            hasHotel: filters.hasHotel ? '1' : '0',
-            city: filters.suggest,
-            tags: filters.tagsCode,
-            continents: filters.continentsCode
-          }
+    return request.createStream<
+      ResponseResults.Destination,
+      ResponseSDKBase<ResponseResults.Destination[]>
+    >(this.baseUrl + 'destinations', {
+      data: {
+        limit: this.defaultLimit,
+        page: 0,
+        destinations: {
+          originCode: filters.originCode,
+          budget: filters.budget,
+          budgetFrom: filters.budgetFrom,
+          months: filters.months,
+          datesFrom: filters.datesFrom,
+          datesTo: filters.datesTo,
+          daysMin: filters.daysMin,
+          daysMax: filters.daysMax,
+          hasHotel: filters.hasHotel ? '1' : '0',
+          city: filters.suggest,
+          tags: filters.tagsCode,
+          continents: filters.continentsCode
         }
       }
-    );
+    });
   }
 
-  public streamDates(filters: RequestFilters.Dates): RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> {
+  public streamDates(
+    filters: RequestFilters.Dates
+  ): RequestStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     return request.createStream<ResponseResults.Dates, ResponseSDKBase<ResponseResults.Dates[]>>(
-      this.baseUrl + 'destinations/' + filters.destinationCode + '/dates', {
+      this.baseUrl + 'destinations/' + filters.destinationCode + '/dates',
+      {
         data: {
           limit: this.defaultLimit,
           page: 0,
@@ -199,10 +211,13 @@ export class TripoowSDK<R extends RequestHandler> {
     );
   }
 
-  public async getDatesOverview(filters: RequestFilters.Dates): Promise<ResponseSDKBase<ResponseResults.DatesOverview>> {
+  public async getDatesOverview(
+    filters: RequestFilters.Dates
+  ): Promise<ResponseSDKBase<ResponseResults.DatesOverview>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.DatesOverview>>(
-      this.baseUrl + 'destinations/' + filters.destinationCode + '/dates', {
+      this.baseUrl + 'destinations/' + filters.destinationCode + '/dates',
+      {
         data: {
           limit: this.defaultLimit,
           page: 0,
@@ -219,10 +234,13 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public async getPacksOverview(filters: RequestFilters.PackOverview): Promise<ResponseSDKBase<ResponseResults.PackOverview>> {
+  public async getPacksOverview(
+    filters: RequestFilters.PackOverview
+  ): Promise<ResponseSDKBase<ResponseResults.PackOverview>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.PackOverview>>(
-      this.baseUrl + 'packs/overview', {
+      this.baseUrl + 'packs/overview',
+      {
         data: {
           packs: {
             budget: filters.budget,
@@ -241,10 +259,13 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public streamPacks(filters: RequestFilters.Pack): RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> {
+  public streamPacks(
+    filters: RequestFilters.Pack
+  ): RequestStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     return request.createStream<ResponseResults.Pack, ResponseSDKBase<ResponseResults.Pack[]>>(
-      this.baseUrl + 'packs', {
+      this.baseUrl + 'packs',
+      {
         data: {
           limit: this.defaultLimit,
           page: 0,
@@ -255,10 +276,13 @@ export class TripoowSDK<R extends RequestHandler> {
     );
   }
 
-  public async getPackCheck(packToken: string): Promise<ResponseSDKBase<ResponseResults.PackCheck>> {
+  public async getPackCheck(
+    packToken: string
+  ): Promise<ResponseSDKBase<ResponseResults.PackCheck>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.post<ResponseSDKBase<ResponseResults.PackCheck>>(
-      this.baseUrl + 'packs/check', {
+      this.baseUrl + 'packs/check',
+      {
         data: {
           check: {
             packToken: packToken
@@ -269,10 +293,13 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public async postPackCrossover(filters: RequestFilters.PackCrossover): Promise<ResponseSDKBase<ResponseResults.Pack>> {
+  public async postPackCrossover(
+    filters: RequestFilters.PackCrossover
+  ): Promise<ResponseSDKBase<ResponseResults.Pack>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.post<ResponseSDKBase<ResponseResults.Pack>>(
-      this.baseUrl + 'packs/crossover', {
+      this.baseUrl + 'packs/crossover',
+      {
         data: {
           crossover: {
             packOldToken: filters.packOldToken,
@@ -285,7 +312,9 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public async postPackBooking(filters: RequestFilters.Booking.Pack): Promise<ResponseSDKBase<string>> {
+  public async postPackBooking(
+    filters: RequestFilters.Booking.Pack
+  ): Promise<ResponseSDKBase<string>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.post<ResponseSDKBase<string>>(this.baseUrl + 'packs/booking', {
       data: {
@@ -295,36 +324,42 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public streamAccomodations(filters: RequestFilters.Accomodation): RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> {
+  public streamAccomodations(
+    filters: RequestFilters.Accomodation
+  ): RequestStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    return request.createStream<ResponseResults.Accomodation, ResponseSDKBase<ResponseResults.Accomodation[]>>(
-      this.baseUrl + 'accomodations', {
-        data: {
-          limit: this.defaultLimit,
-          page: 0,
-          accomodations: {
-            checkin: filters.checkin,
-            checkout: filters.checkout,
-            destinationCode: filters.destinationCode,
-            guests: filters.guests,
-            priceNightMin: filters.priceNightMin,
-            priceNightMax: filters.priceNightMax,
-            ratingMin: filters.ratingMin,
-            stars: filters.stars,
-            metersFromCenterMin: filters.metersFromCenterMin,
-            metersFromCenterMax: filters.metersFromCenterMax,
-            facilities: filters.facilities,
-          },
-          sort: filters.sort
-        }
+    return request.createStream<
+      ResponseResults.Accomodation,
+      ResponseSDKBase<ResponseResults.Accomodation[]>
+    >(this.baseUrl + 'accomodations', {
+      data: {
+        limit: this.defaultLimit,
+        page: 0,
+        accomodations: {
+          checkin: filters.checkin,
+          checkout: filters.checkout,
+          destinationCode: filters.destinationCode,
+          guests: filters.guests,
+          priceNightMin: filters.priceNightMin,
+          priceNightMax: filters.priceNightMax,
+          ratingMin: filters.ratingMin,
+          stars: filters.stars,
+          metersFromCenterMin: filters.metersFromCenterMin,
+          metersFromCenterMax: filters.metersFromCenterMax,
+          facilities: filters.facilities
+        },
+        sort: filters.sort
       }
-    );
+    });
   }
 
-  public async getHotelDetails(filters: RequestFilters.HotelDetails): Promise<ResponseSDKBase<ResponseResults.Accomodation>> {
+  public async getHotelDetails(
+    filters: RequestFilters.HotelDetails
+  ): Promise<ResponseSDKBase<ResponseResults.Accomodation>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.Accomodation>>(
-      this.baseUrl + 'hotels/' + filters.id, {
+      this.baseUrl + 'hotels/' + filters.id,
+      {
         data: {
           hotels: {
             checkin: filters.checkin,
@@ -338,7 +373,19 @@ export class TripoowSDK<R extends RequestHandler> {
     return response;
   }
 
-  public async getDestinationImages(destinationCode: string): Promise<ResponseResults.DestinationImage[]> {
+  public async getDestinationDetails(
+    destinationCode: string
+  ): Promise<ResponseResults.Destination> {
+    const request: R = new this.builderRequest(this.defaultHeaders);
+    const response = await request.get<ResponseSDKBase<ResponseResults.Destination>>(
+      this.baseUrl + 'cities/' + destinationCode + '/details'
+    );
+    return response.results;
+  }
+
+  public async getDestinationImages(
+    destinationCode: string
+  ): Promise<ResponseResults.DestinationImage[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.DestinationImage[]>>(
       this.baseUrl + 'cities/' + destinationCode + '/images'
@@ -346,7 +393,9 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getDestinationTags(destinationCode: string): Promise<ResponseResults.DestinationTag[]> {
+  public async getDestinationTags(
+    destinationCode: string
+  ): Promise<ResponseResults.DestinationTag[]> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.DestinationTag[]>>(
       this.baseUrl + 'cities/' + destinationCode + '/tags'
@@ -354,7 +403,9 @@ export class TripoowSDK<R extends RequestHandler> {
     return response.results;
   }
 
-  public async getDestinationWiki(destinationCode: string): Promise<ResponseResults.DestinationWiki> {
+  public async getDestinationWiki(
+    destinationCode: string
+  ): Promise<ResponseResults.DestinationWiki> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const response = await request.get<ResponseSDKBase<ResponseResults.DestinationWiki>>(
       this.baseUrl + 'cities/' + destinationCode + '/wiki'
@@ -364,15 +415,21 @@ export class TripoowSDK<R extends RequestHandler> {
 
   public async getBookings(): Promise<ResponseSDKBase<ResponseResults.Bookings>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    const response = await request.get<ResponseSDKBase<ResponseResults.Bookings>>(this.baseUrl + 'bookings');
+    const response = await request.get<ResponseSDKBase<ResponseResults.Bookings>>(
+      this.baseUrl + 'bookings'
+    );
     return response;
   }
 
   public async getBookingDetails(bookingCode: string): Promise<ResponseResults.Booking> {
     const request: R = new this.builderRequest(this.defaultHeaders);
     const responses = await Promise.all([
-      request.get<ResponseSDKBase<ResponseResults.Booking>>(this.baseUrl + 'bookings/' + bookingCode),
-      request.get<ResponseSDKBase<ResponseResults.Payment>>(this.baseUrl + 'bookings/' + bookingCode + '/payment'),
+      request.get<ResponseSDKBase<ResponseResults.Booking>>(
+        this.baseUrl + 'bookings/' + bookingCode
+      ),
+      request.get<ResponseSDKBase<ResponseResults.Payment>>(
+        this.baseUrl + 'bookings/' + bookingCode + '/payment'
+      )
     ]);
     responses[0].results.payment = responses[1].results;
     return responses[0].results;
@@ -383,7 +440,7 @@ export class TripoowSDK<R extends RequestHandler> {
     filters?: Filters
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    return request.get<ResponseSDKBase<Results>>(this.baseUrl + url, filters);;
+    return request.get<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
   }
 
   public async post<Filters, Results>(
@@ -391,6 +448,6 @@ export class TripoowSDK<R extends RequestHandler> {
     filters?: Filters
   ): Promise<ResponseSDKBase<Results>> {
     const request: R = new this.builderRequest(this.defaultHeaders);
-    return request.post<ResponseSDKBase<Results>>(this.baseUrl + url, filters);;
+    return request.post<ResponseSDKBase<Results>>(this.baseUrl + url, filters);
   }
 }
