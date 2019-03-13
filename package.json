@@ -21,6 +21,7 @@
     "lerna": "lerna",
     "build": "lerna run build",
     "prepublish": "yarn run build",
+    "publish:from-git":"yarn run lerna publish from-git",
     "publish": "yarn run lerna publish --force-publish",
     "clean": "rimraf ./packages/*/dist ./packages/*/docs",
     "clean:all": "rimraf ./packages/*/node_modules && yarn run clean",
