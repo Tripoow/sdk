@@ -35,18 +35,23 @@ export class TripoowSDK<R extends RequestHandler> {
   constructor(
     protected builderRequest: new (defaultHeaders?: Headers) => R,
     protected env: Environment = 'production',
-    protected defaultHeaders: Headers = new Headers()
+    protected defaultHeaders: Headers = new Headers(),
+    protected sdkUrl?: string
   ) {
-    switch (this.env) {
-      case 'development':
-        this.baseUrl = 'https://devapi.tripoow.com/';
-        break;
-      case 'stage':
-        this.baseUrl = 'https://stageapi.tripoow.com/';
-        break;
-      default:
-        this.baseUrl = 'https://api.tripoow.com/';
-        break;
+    if (this.sdkUrl !== undefined) {
+      this.baseUrl = this.sdkUrl;
+    } else {
+      switch (this.env) {
+        case 'development':
+          this.baseUrl = 'https://devapi.tripoow.com/';
+          break;
+        case 'stage':
+          this.baseUrl = 'https://stageapi.tripoow.com/';
+          break;
+        default:
+          this.baseUrl = 'https://api.tripoow.com/';
+          break;
+      }
     }
   }
 
