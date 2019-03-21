@@ -1,5 +1,4 @@
 export namespace ResponseResults {
-
   export interface AuthLogin {
     access_token: string;
     expires_in: number;
@@ -127,7 +126,8 @@ export namespace ResponseResults {
     model: T;
   }
 
-  export interface Carrier { // Company
+  export interface Carrier {
+    // Company
     type: string; // FlightCompany | BusCompany | TrainCompany.... Public or Private?
     logo?: string;
     code: string;
@@ -179,7 +179,6 @@ export namespace ResponseResults {
   }
 
   export namespace Hotel {
-
     export interface Poi {
       id: string;
       name: string;
@@ -285,8 +284,8 @@ export namespace ResponseResults {
   export interface Accomodation {
     id: string;
     name: string;
-    latitude?: number;
-    longitude?: number;
+    latitude?: string;
+    longitude?: string;
     descriptions?: {
       type: string;
       text: string;
@@ -361,7 +360,7 @@ export namespace ResponseResults {
     discount?: {
       coupons: any[];
       credit: number;
-    }
+    };
   }
 
   export interface Payment {
@@ -404,7 +403,7 @@ export namespace ResponseResults {
     pack: Pack | null;
     user: {
       email: string;
-      [key: string]: string
+      [key: string]: string;
     };
     services: {
       flights?: BookingServiceFlight;
